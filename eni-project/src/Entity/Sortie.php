@@ -6,6 +6,7 @@ use App\Repository\SortieRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=SortieRepository::class)
@@ -26,6 +27,8 @@ class Sortie
 
     /**
      * @ORM\Column(type="datetime")
+     * @Assert\DateTime
+     * @var string A "Y-m-d H:i:s" formatted value
      */
     private $dateHeureDebut;
 
@@ -68,7 +71,7 @@ class Sortie
     private $campus;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Participant::class, inversedBy="sorties")
+     * @ORM\ManyToOne(targetEntity=Participant::class, inversedBy="sorties_organisateur")
      * @ORM\JoinColumn(nullable=false)
      */
     private $organisateur;

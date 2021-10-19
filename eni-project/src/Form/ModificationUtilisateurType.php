@@ -4,6 +4,8 @@ namespace App\Form;
 
 use App\Entity\Participant;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\TelType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -14,12 +16,10 @@ class ModificationUtilisateurType extends AbstractType
         $builder
             ->add('pseudo')
             //->add('roles')
-            ->add('password')
             ->add('nom')
             ->add('prenom')
-            ->add('telephone')
-            ->add('mail')
-            //->add('actif')
+            ->add('telephone', TelType::class)
+            ->add('mail', EmailType::class)
         ;
     }
 

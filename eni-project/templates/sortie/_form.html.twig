@@ -1,4 +1,31 @@
 {{ form_start(form) }}
     {{ form_widget(form) }}
-    <button type="btn button" class="btn btn-primary">{{ button_label|default('Confirmer') }}</button>
+    <div class="row">
+        <div class="col">
+            <div class="form-group">
+                {{ form_row(form.nom) }}
+            </div>
+            <div class="form-group">
+                {{ form_row(form.dateHeureDebut) }}
+            </div>
+            <div class="form-group">
+                {{ form_row(form.dateLimiteInscription) }}
+            </div>
+            <div class="form-group">
+                {{ form_row(form.nbInscriptionsMax) }}
+            </div>
+            <div class="form-group">
+                {{ form_row(form.duree) }}
+            </div>
+            <div class="form-group">
+                {{ form_row(form.informations) }}
+            </div>
+        </div>
+        <div class="col">
+            <div class="form-group">
+                {{ form_row(form.lieu) }}
+            </div>
+        </div>
+    </div>
+    <button class="btn">{{ button_label|default('Save') }}</button>
 {{ form_end(form) }}

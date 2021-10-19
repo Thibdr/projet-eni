@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Sortie;
+
 use App\Form\SortieType;
 use App\Form\FiltreSortieType;
+use App\Form\CreationSortieType;
 use App\Repository\SortieRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -59,14 +61,21 @@ class SortieController extends AbstractController
     public function new(Request $request): Response
     {
         $sortie = new Sortie();
-        $form = $this->createForm(SortieType::class, $sortie);
+
+        $form = $this->createForm(CreationSortieType::class, $sortie);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $sortie->setEtat('En création');
+            $user = $this->getUser();
+            $sortie->setOrganisateur($user);
+            $sortie->setCampus($user->getCampus());
+
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($sortie);
             $entityManager->flush();
 
+            $this->addFlash('notice', 'La sortie est créée');
             return $this->redirectToRoute('sortie_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -91,7 +100,7 @@ class SortieController extends AbstractController
      */
     public function edit(Request $request, Sortie $sortie): Response
     {
-        $form = $this->createForm(SortieType::class, $sortie);
+        $form = $this->createForm(CreationSortieType::class, $sortie);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

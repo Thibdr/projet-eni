@@ -6,11 +6,13 @@ use App\Repository\ParticipantRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=ParticipantRepository::class)
+ * @UniqueEntity(fields={"pseudo"}, message="There is already an account with this pseudo")
  */
 class Participant implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -48,7 +50,7 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     private $prenom;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="string", length=10)
      */
     private $telephone;
 
@@ -197,12 +199,12 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getTelephone(): ?int
+    public function getTelephone(): ?string
     {
         return $this->telephone;
     }
 
-    public function setTelephone(int $telephone): self
+    public function setTelephone(string $telephone): self
     {
         $this->telephone = $telephone;
 

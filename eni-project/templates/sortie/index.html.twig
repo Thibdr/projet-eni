@@ -5,6 +5,10 @@
 {% block body %}
     <h1>Sortie index</h1>
 
+    <h3>Filtrer les sorties</h3>
+
+    {{ include('sortie/_form.html.twig') }}
+
     <table class="table">
         <thead>
             <tr>
@@ -15,7 +19,7 @@
                 <th>DateLimiteInscription</th>
                 <th>NbInscriptionsMax</th>
                 <th>InfoSortie</th>
-                <th>actions</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -35,11 +39,11 @@
             </tr>
         {% else %}
             <tr>
-                <td colspan="8">no records found</td>
+                <td colspan="8">Aucun résultat ne correspond à votre recherche</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
 
-    <a href="{{ path('sortie_new') }}">Create new</a>
+    <a href="{{ path('sortie_new') }}">Créer une sortie</a>
 {% endblock %}

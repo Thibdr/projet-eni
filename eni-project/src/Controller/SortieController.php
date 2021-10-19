@@ -4,11 +4,14 @@ namespace App\Controller;
 
 use App\Entity\Sortie;
 use App\Form\SortieType;
+use App\Form\FiltreSortieType;
 use App\Repository\SortieRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+
+use App\Repository\LieuRepository;
 
 /**
  * @Route("/sortie")
@@ -16,12 +19,37 @@ use Symfony\Component\Routing\Annotation\Route;
 class SortieController extends AbstractController
 {
     /**
-     * @Route("/", name="sortie_index", methods={"GET"})
+     * @Route("/", name="sortie_index", methods={"GET","POST"})
      */
-    public function index(SortieRepository $sortieRepository): Response
+    public function index(SortieRepository $sortieRepository, LieuRepository $lr, Request $request): Response
     {
-        return $this->render('sortie/index.html.twig', [
+        $form = $this->createForm(FiltreSortieType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+
+            $site = $data['site'];
+            $nom = $data['nom'];
+            $orga = $data['orga'];
+            $inscrit = $data['inscrit'];
+            $non_inscrit = $data['non_inscrit'];
+            $passees = $data['passees'];
+
+
+            is_null($site) ? $sorted = $sortieRepository->findAll(): $sorted = $sortieRepository->findBySite($site) ;
+
+            $form = $this->createForm(FiltreSortieType::class);
+            $form->handleRequest($request);
+            return $this->renderForm('sortie/index.html.twig', [
+                'sorties' => $sorted,
+                'form' => $form,
+            ]);
+        }
+
+        return $this->renderForm('sortie/index.html.twig', [
             'sorties' => $sortieRepository->findAll(),
+            'form' => $form,
         ]);
     }
 

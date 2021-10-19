@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\Sortie;
 use App\Form\CreationSortieType;
-use App\Repository\EtatRepository;
 use App\Repository\SortieRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;

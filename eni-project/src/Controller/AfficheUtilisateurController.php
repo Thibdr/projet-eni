@@ -10,16 +10,12 @@ use Symfony\Component\Routing\Annotation\Route;
 class AfficheUtilisateurController extends AbstractController
 {
     /**
-     * @Route("/afficheutilisateur/{id}", name="affiche_utilisateur")
+     * @Route("/afficheutilisateur/{id}", name="affiche_utilisateur" , methods={"GET"})
      */
-    public function AfficheUtilisateur($id): Response
+    public function AfficheUtilisateur(Participant $participant): Response
     {
-        $user = new Participant();
-        $tableRepo = $this->getDoctrine()->getManager()->getRepository(Participant::class);
-        $user = $tableRepo->find($id);
-        dd($user);
         return $this->render('affiche_utilisateur/afficheUtilisateur.html.twig', [
-            'user' => $user,
+            'participant' => $participant,
         ]);
     }
 }

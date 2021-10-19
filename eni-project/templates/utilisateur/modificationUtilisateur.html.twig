@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello UtilisateurController!{% endblock %}
+
+{% block body %}
+    {{ form_start(modificationUtilisateurForm) }}
+    {{ form_row(modificationUtilisateurForm.pseudo, {
+        value : app.user.pseudo
+    })
+    }}
+
+    {{ form_row(modificationUtilisateurForm.prenom, {
+        value : app.user.prenom
+    })
+    }}
+
+    {{ form_row(modificationUtilisateurForm.nom, {
+        value : app.user.nom
+    })
+    }}
+
+    {{ form_row(modificationUtilisateurForm.telephone, {
+        value : app.user.telephone
+    })
+    }}
+
+    {{ form_row(modificationUtilisateurForm.mail, {
+        value : app.user.mail
+    })
+    }}
+
+    <button type="submit" class="btn">Enregistrer</button>
+    <button type="reset" class="btn">Annuler</button>
+    {{ form_end(modificationUtilisateurForm) }}
+{% endblock %}

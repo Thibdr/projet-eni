@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Campus;
 use App\Entity\Participant;
 use App\Form\RegistrationFormType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -18,11 +19,14 @@ class RegistrationController extends AbstractController
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasherInterface): Response
     {
         $user = new Participant();
+        $tableRepo = $this->getDoctrine()->getManager()->getRepository(Campus::class);
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             // encode the plain password
+            $tableList = $tableRepo->findAll();
+            $user->setCampus($tableList[0]);
             $user->setRoles(['ROLE_USER']);
             $user->setActif(true);
             $user->setPassword(

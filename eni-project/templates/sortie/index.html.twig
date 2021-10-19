@@ -7,7 +7,7 @@
 
     <h3>Filtrer les sorties</h3>
 
-    {{ include('sortie/_form.html.twig') }}
+    {{ include('sortie/_filters.html.twig') }}
 
     <table class="table">
         <thead>
@@ -31,7 +31,7 @@
                 <td>{{ sortie.duree }}</td>
                 <td>{{ sortie.dateLimiteInscription ? sortie.dateLimiteInscription|date('Y-m-d') : '' }}</td>
                 <td>{{ sortie.nbInscriptionsMax }}</td>
-                <td>{{ sortie.infoSortie }}</td>
+                <td>{{ sortie.informations }}</td>
                 <td>
                     <a href="{{ path('sortie_show', {'id': sortie.id}) }}">show</a>
                     <a href="{{ path('sortie_edit', {'id': sortie.id}) }}">edit</a>

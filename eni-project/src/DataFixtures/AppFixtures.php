@@ -10,8 +10,8 @@ use App\Entity\Ville;
 use App\Entity\Lieu;
 use App\Entity\Sortie;
 use App\Entity\Participant;
-use App\Entity\Etat;
 use App\Entity\Campus;
+//use App\Entity\Etat;
 
 class AppFixtures extends Fixture
 {
@@ -40,8 +40,8 @@ class AppFixtures extends Fixture
         }        
         $manager->flush();
 
-        // Lieu
-        $etat = [];
+        /* Etat 
+        etat = [];
         $fake_etat = ['Créée','Ouverte','Clôturée','Activité en cours','Passée','Annulée'];
         for ($i = 0; $i < 6; $i++) {
             $etat[$i] = new Etat();
@@ -49,6 +49,7 @@ class AppFixtures extends Fixture
             $manager->persist($etat[$i]);
         }        
         $manager->flush();
+        */
 
         // Campus
         $campus = [];
@@ -84,10 +85,10 @@ class AppFixtures extends Fixture
             $sortie[$i]->setDuree(30);
             $sortie[$i]->setDateLimiteInscription(new DateTime());
             $sortie[$i]->setNbInscriptionsMax(30);
-            $sortie[$i]->setInfoSortie('Infos Sortie'.$i);
-            $sortie[$i]->setEtat($etat[rand(0,5)]);
+            $sortie[$i]->setInformations('Infos Sortie'.$i);
             $sortie[$i]->setCampus($campus[rand(0,2)]);
             $sortie[$i]->setLieu($lieu[rand(0,4)]);
+            $sortie[$i]->setEtat('En cours');
             $sortie[$i]->setOrganisateur($participant[rand(0,29)]);
             for ($y = 0; $y < 30; $y++) {
                 $sortie[$i]->addParticipant($participant[$y]);

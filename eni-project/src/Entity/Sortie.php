@@ -6,6 +6,7 @@ use App\Repository\SortieRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=SortieRepository::class)
@@ -20,26 +21,39 @@ class Sortie
     private $id;
 
     /**
+     * @Assert\NotBlank(message="Veuillez renseigner un nom")
+     * @Assert\Length(min="3", max="255",
+     *     minMessage="Nom trop court ! Au moins 3 caractères !",
+     *     maxMessage="Nom trop long ! Au plus 255 caractères"
+     * )
      * @ORM\Column(type="string", length=150)
      */
     private $nom;
 
     /**
+     * @Assert\NotBlank(message="Veuillez renseigner une date de début")
+     * @Assert\Type(type="\DateTimeInterface")
      * @ORM\Column(type="datetime")
      */
     private $dateHeureDebut;
 
     /**
+     * @Assert\NotBlank(message="Veuillez renseigner la durée")
+     * @Assert\Positive
      * @ORM\Column(type="integer")
      */
     private $duree;
 
     /**
+     * @Assert\NotBlank(message="Veuillez renseigner une date limite d'inscription")
+     * @Assert\Type(type="\DateTimeInterface")
      * @ORM\Column(type="date")
      */
     private $dateLimiteInscription;
 
     /**
+     * @Assert\NotBlank(message="Veuillez renseigner le nombre de places maximum")
+     * @Assert\Positive
      * @ORM\Column(type="integer")
      */
     private $nbInscriptionsMax;
@@ -50,6 +64,7 @@ class Sortie
     private $infoSortie;
 
     /**
+     * @Assert\Type(type="App\Entity\Lieu")
      * @ORM\ManyToOne(targetEntity=Lieu::class, inversedBy="sorties")
      * @ORM\JoinColumn(nullable=false)
      */

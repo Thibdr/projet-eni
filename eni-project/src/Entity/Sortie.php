@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * @ORM\Entity(repositoryClass=SortieRepository::class)
@@ -21,41 +22,26 @@ class Sortie
     private $id;
 
     /**
-     * @Assert\NotBlank(message="Veuillez renseigner un nom")
-     * @Assert\Length(min="3", max="255",
-     *     minMessage="Nom trop court ! Au moins 3 caractères !",
-     *     maxMessage="Nom trop long ! Au plus 255 caractères"
-     * )
      * @ORM\Column(type="string", length=150)
      */
     private $nom;
 
     /**
-     * @Assert\NotBlank(message="Veuillez renseigner une date de début")
-     * @Assert\Type(type="\DateTimeInterface")
      * @ORM\Column(type="datetime")
-     * @Assert\DateTime
-     * @var string A "Y-m-d H:i:s" formatted value
      */
     private $dateHeureDebut;
 
     /**
-     * @Assert\NotBlank(message="Veuillez renseigner la durée")
-     * @Assert\Positive
      * @ORM\Column(type="integer")
      */
     private $duree;
 
     /**
-     * @Assert\NotBlank(message="Veuillez renseigner une date limite d'inscription")
-     * @Assert\Type(type="\DateTimeInterface")
      * @ORM\Column(type="date")
      */
     private $dateLimiteInscription;
 
     /**
-     * @Assert\NotBlank(message="Veuillez renseigner le nombre de places maximum")
-     * @Assert\Positive
      * @ORM\Column(type="integer")
      */
     private $nbInscriptionsMax;
@@ -63,18 +49,16 @@ class Sortie
     /**
      * @ORM\Column(type="text", nullable=true)
      */
-    private $infoSortie;
+    private $informations;
 
     /**
-     * @Assert\Type(type="App\Entity\Lieu")
      * @ORM\ManyToOne(targetEntity=Lieu::class, inversedBy="sorties")
      * @ORM\JoinColumn(nullable=false)
      */
     private $lieu;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Etat::class, inversedBy="sorties")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\Column(type="string", length=40)
      */
     private $etat;
 
@@ -165,14 +149,14 @@ class Sortie
         return $this;
     }
 
-    public function getInfoSortie(): ?string
+    public function getInformations(): ?string
     {
-        return $this->infoSortie;
+        return $this->informations;
     }
 
-    public function setInfoSortie(?string $infoSortie): self
+    public function setInformations(?string $informations): self
     {
-        $this->infoSortie = $infoSortie;
+        $this->informations = $informations;
 
         return $this;
     }
@@ -189,12 +173,12 @@ class Sortie
         return $this;
     }
 
-    public function getEtat(): ?Etat
+    public function getEtat(): ?string
     {
         return $this->etat;
     }
 
-    public function setEtat(?Etat $etat): self
+    public function setEtat(string $etat): self
     {
         $this->etat = $etat;
 
@@ -247,5 +231,16 @@ class Sortie
         $this->participant->removeElement($participant);
 
         return $this;
+    }
+
+    /**
+     * @Assert\Callback
+     */
+    public function validate(ExecutionContextInterface $context, $payload) {
+        if ($this->dateHeureDebut < $this->dateLimiteInscription) {
+            $context->buildViolation("La date limite d'inscription doit précéder la date de début de la sortie")
+                ->atPath('dateHeureDebut')
+                ->addViolation();
+        }
     }
 }

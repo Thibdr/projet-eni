@@ -67,11 +67,23 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\OneToMany(targetEntity=Sortie::class, mappedBy="organisateur")
      */
+    private $sorties_organisateur;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Sortie::class, mappedBy="participant")
+     */
     private $sorties;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Campus::class, inversedBy="participants")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $campus;
 
     public function __construct()
     {
         $this->sorties = new ArrayCollection();
+        $this->sorties_organisateur = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -249,6 +261,48 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
                 $sorty->setOrganisateur(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|SortieOrganisateur[]
+     */
+    public function getSortiesOrganisateur(): Collection
+    {
+        return $this->sorties_organisateur ;
+    }
+
+    public function addSortyUtilisateur(Sortie $sorties_organisateur ): self
+    {
+        if (!$this->sorties_organisateur >contains($sorties_organisateur )) {
+            $this->sorties_organisateur [] = $sorties_organisateur ;
+            $sorties_organisateur ->setOrganisateur($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSortyUtilisateur(Sortie $sorties_organisateur ): self
+    {
+        if ($this->sorties_organisateur ->removeElement($sorties_organisateur )) {
+            // set the owning side to null (unless already changed)
+            if ($sorties_organisateur ->getOrganisateur() === $this) {
+                $sorties_organisateur ->setOrganisateur(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getCampus(): ?Campus
+    {
+        return $this->campus;
+    }
+
+    public function setCampus(?Campus $campus): self
+    {
+        $this->campus = $campus;
 
         return $this;
     }

@@ -60,4 +60,19 @@ class UtilisateurController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
     }
+
+    /**
+     * @Route("/afficheutilisateur/{id}", name="affiche_utilisateur" , methods={"GET"})
+     */
+    public function AfficheUtilisateur(Participant $participant): Response
+    {
+        if($participant != null) {
+            return $this->render('affiche_utilisateur/afficheUtilisateur.html.twig', [
+                'participant' => $participant,
+            ]);
+        }
+        else{
+            return $this->redirectToRoute('sortie_index');
+        }
+    }
 }

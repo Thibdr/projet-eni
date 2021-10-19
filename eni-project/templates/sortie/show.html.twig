@@ -1,46 +1,78 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Sortie{% endblock %}
+{% block title %}Affichage une sortie{% endblock %}
 
 {% block body %}
-    <h1>Sortie</h1>
+    <h1 class="text-center text-primary my-5">Afficher une sortie</h1>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ sortie.id }}</td>
-            </tr>
-            <tr>
-                <th>Nom</th>
-                <td>{{ sortie.nom }}</td>
-            </tr>
-            <tr>
-                <th>DateHeureDebut</th>
-                <td>{{ sortie.dateHeureDebut ? sortie.dateHeureDebut|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>Duree</th>
-                <td>{{ sortie.duree }}</td>
-            </tr>
-            <tr>
-                <th>DateLimiteInscription</th>
-                <td>{{ sortie.dateLimiteInscription ? sortie.dateLimiteInscription|date('Y-m-d') : '' }}</td>
-            </tr>
-            <tr>
-                <th>NbInscriptionsMax</th>
-                <td>{{ sortie.nbInscriptionsMax }}</td>
-            </tr>
-            <tr>
-                <th>InfoSortie</th>
-                <td>{{ sortie.infoSortie }}</td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="row justify-content-md-center">
+        <div class="col">
+            <div class="card">
+                <div class="card-header bg-secondary text-light text-center">
+                    <strong>{{ sortie.nom }}</strong> le {{ sortie.dateHeureDebut | date('d/m/Y à H:i:s') }}
+                </div>
+                <div class="card-body">
+                    <div class="my-2">
+                        <h3 class="text-uppercase my-1">Inscription</h3>
+                        <p>Date limite d'inscription : {{ sortie.dateLimiteInscription | date('d/m/Y') }}</p>
+                        <span class="badge bg-danger">{{ sortie.nbInscriptionsMax }} places</span>
+                    </div>
+                    <hr>
+                    <div class="my-2">
+                        <h3 class="text-uppercase my-1">Déroulement de la sortie</h3>
+                        <p>Durée : {{ sortie.duree }} minutes</p>
+                        <p>Description et informations : {{ sortie.informations }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card">
+                <div class="card-header bg-secondary text-light text-center">
+                    Lieu du RDV : <strong>{{ sortie.lieu.nom }}</strong>
+                </div>
+                <div class="card-body">
+                    <div class="my-2">
+                        <h3 class="text-uppercase my-1">Adresse</h3>
+                        <p>{{ sortie.lieu.rue }}</p>
+                        <p>{{ sortie.lieu.ville.codePostal }} - {{ sortie.lieu.ville.nom }}</p>
+                    </div>
+                    <hr>
+                    <div class="my-2">
+                        <h3 class="text-uppercase my-1">Position GPS</h3>
+                        <p>Latitude : {{ sortie.lieu.latitude }}</p>
+                        <p>Longitude : {{ sortie.lieu.longitude }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <a href="{{ path('sortie_index') }}">back to list</a>
-
-    <a href="{{ path('sortie_edit', {'id': sortie.id}) }}">edit</a>
-
-    {{ include('sortie/_delete_form.html.twig') }}
+    <div class="row my-4">
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header bg-secondary text-light text-center">
+                    Liste des participants inscrits
+                </div>
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                            <th>Pseudo</th>
+                            <th>Nom</th>
+                            <th>Actions</th>
+                        </thead>
+                        <tbody>
+                            {% for participant in sortie.participant %}
+                                <tr>
+                                    <td>{{ participant.pseudo }}</td>
+                                    <td>{{ participant.prenom | capitalize }} {{ participant.nom | upper }}</td>
+                                    <td><a href="{{ path('affiche_utilisateur', {'id':participant.id }) }}" class="btn btn-primary">Voir le profil</a></td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

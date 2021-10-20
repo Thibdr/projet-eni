@@ -28,36 +28,33 @@ class SortieController extends AbstractController
      */
     public function index(SortieRepository $sortieRepository, LieuRepository $lr, Request $request): Response
     {
-        $user = $this->getUser();
         $form = $this->createForm(FiltreSortieType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
+
             $site = $data['site'];
             $nom = $data['nom'];
             $orga = $data['orga'];
             $inscrit = $data['inscrit'];
             $non_inscrit = $data['non_inscrit'];
             $passees = $data['passees'];
-            $start = $data['start'];
-            $end = $data['end'];
+
+
+            is_null($site) ? $sorted = $sortieRepository->findAll(): $sorted = $sortieRepository->findBySite($site) ;
 
             $form = $this->createForm(FiltreSortieType::class);
             $form->handleRequest($request);
             return $this->renderForm('sortie/index.html.twig', [
-                'sorties' => $sortieRepository->findWithFilters(
-                    $site,$nom,$orga,$inscrit,$non_inscrit,$passees,$start,$end,$user
-                ),
+                'sorties' => $sorted,
                 'form' => $form,
-                'user' => $user
             ]);
         }
 
         return $this->renderForm('sortie/index.html.twig', [
             'sorties' => $sortieRepository->findAll(),
             'form' => $form,
-            'user' => $user
         ]);
     }
 

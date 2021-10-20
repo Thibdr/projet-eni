@@ -13,8 +13,10 @@
             {{ encore_entry_script_tags('app') }}
         {% endblock %}
     </head>
-    <body>
-        <div class="container-fluid">
+    <body class="bg-soft bg-light">
+        {{ include('layout/_navbar.html.twig') }}
+
+        <div class="container-fluid my-5">
             {% block body %}{% endblock %}
         </div>
     </body>

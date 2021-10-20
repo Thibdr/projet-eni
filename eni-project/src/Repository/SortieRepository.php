@@ -22,7 +22,7 @@ class SortieRepository extends ServiceEntityRepository
     /**
     * Retourne une liste de sorties, filtrée selon les paramétres fournis
     */
-    public function findWithFilters($site,$words,$organisateur,$inscrit,$non_inscrit,$passees,$start,$end,$user){
+    public function findWithFilters($site,$words,$organisateur,$inscrit,$non_inscrit,$passees,$start,$end){
         $em = $this->getEntityManager();
         $qb = $em->createQueryBuilder();
 

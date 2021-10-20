@@ -40,14 +40,15 @@ class SortieController extends AbstractController
             $inscrit = $data['inscrit'];
             $non_inscrit = $data['non_inscrit'];
             $passees = $data['passees'];
-
-
-            is_null($site) ? $sorted = $sortieRepository->findAll(): $sorted = $sortieRepository->findBySite($site) ;
+            $start = $data['start'];
+            $end = $data['end'];
 
             $form = $this->createForm(FiltreSortieType::class);
             $form->handleRequest($request);
             return $this->renderForm('sortie/index.html.twig', [
-                'sorties' => $sorted,
+                'sorties' => $sortieRepository->findWithFilters(
+                    $site,$nom,$orga,$inscrit,$non_inscrit,$passees,$start,$end
+                ),
                 'form' => $form,
             ]);
         }

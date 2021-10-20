@@ -50,6 +50,7 @@ class SortieController extends AbstractController
                     $site,$nom,$orga,$inscrit,$non_inscrit,$passees,$start,$end,$user
                 ),
                 'form' => $form,
+                'user' => $user
             ]);
         }
 

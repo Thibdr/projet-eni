@@ -28,6 +28,7 @@ class SortieController extends AbstractController
      */
     public function index(SortieRepository $sortieRepository, LieuRepository $lr, Request $request): Response
     {
+        $user = $this->getUser();
         $form = $this->createForm(FiltreSortieType::class);
         $form->handleRequest($request);
 
@@ -47,7 +48,7 @@ class SortieController extends AbstractController
             $form->handleRequest($request);
             return $this->renderForm('sortie/index.html.twig', [
                 'sorties' => $sortieRepository->findWithFilters(
-                    $site,$nom,$orga,$inscrit,$non_inscrit,$passees,$start,$end
+                    $site,$nom,$orga,$inscrit,$non_inscrit,$passees,$start,$end,$user
                 ),
                 'form' => $form,
             ]);

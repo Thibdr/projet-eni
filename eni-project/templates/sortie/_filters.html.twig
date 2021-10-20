@@ -1,4 +1,36 @@
 {{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Rechercher') }}</button>
+    
+    <div class="row">
+        <div class="col">
+            <div class="form-group">
+                {{ form_row(form.site) }}
+            </div>
+            <div class="form-group">
+                {{ form_row(form.nom) }}
+            </div>
+            <div class="form-group">
+                {{ form_row(form.start) }}
+            </div>
+            <div class="form-group">
+                {{ form_row(form.end) }}
+            </div>
+        </div>
+        <div class="col">
+            <div class="form-group">
+                {{ form_row(form.orga) }}
+            </div>
+            <div class="form-group">
+                {{ form_row(form.inscrit) }}
+            </div>
+            <div class="form-group">
+                {{ form_row(form.non_inscrit) }}
+            </div>
+            <div class="form-group">
+                {{ form_row(form.passees) }}
+            </div>
+        </div>
+        <div class="col">
+            <button class="btn btn-lg btn-primary btn-filters">{{ button_label|default('Rechercher') }}</button>
+        </div>
+    </div>
 {{ form_end(form) }}

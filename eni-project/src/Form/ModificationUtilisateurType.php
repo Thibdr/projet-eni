@@ -16,6 +16,7 @@ class ModificationUtilisateurType extends AbstractType
         $builder
             ->add('pseudo')
             //->add('roles')
+            ->add('password')
             ->add('nom')
             ->add('prenom')
             ->add('telephone', TelType::class)

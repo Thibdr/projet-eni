@@ -15,29 +15,50 @@
     <table class="table">
         <thead>
             <tr>
-                <th>Id</th>
-                <th>Nom</th>
-                <th>DateHeureDebut</th>
-                <th>Duree</th>
-                <th>DateLimiteInscription</th>
-                <th>NbInscriptionsMax</th>
-                <th>InfoSortie</th>
+                <th>Nom de la sortie</th>
+                <th>Date de la sortie</th>
+                <th>Clôture</th>
+                <th>Inscrits/Places</th>
+                <th>Etat</th>
+                <th>Inscrit</th>
+                <th>Organisateur</th>
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
+
         {% for sortie in sorties %}
             <tr>
-                <td>{{ sortie.id }}</td>
                 <td>{{ sortie.nom }}</td>
                 <td>{{ sortie.dateHeureDebut ? sortie.dateHeureDebut|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ sortie.duree }}</td>
                 <td>{{ sortie.dateLimiteInscription ? sortie.dateLimiteInscription|date('Y-m-d') : '' }}</td>
-                <td>{{ sortie.nbInscriptionsMax }}</td>
-                <td>{{ sortie.informations }}</td>
+                <td>{{ sortie.participant|length }} / {{ sortie.nbInscriptionsMax }}</td>
+                <td>{{ sortie.etat}}</td>
+                {% set inscrit = ' ' %}
+                {% for participant in sortie.participant %}
+                    {% if participant == app.user %}
+                        {% set inscrit = 'X' %}
+                    {% endif %}
+                {% endfor %}
+                <td>{{ inscrit }}</td>
+                <td>{{ sortie.organisateur }}</td>
                 <td>
-                    <a href="{{ path('sortie_show', {'id': sortie.id}) }}">Afficher</a>
-                    <a href="{{ path('sortie_edit', {'id': sortie.id}) }}">Editer</a>
+                    {% if sortie.etat == 'En création' %}
+                        <a href="{{ path('sortie_edit', {'id': sortie.id}) }}">Modifier</a>
+                        {% if sortie.organisateur == app.user %}
+                            Publier
+                        {% endif %}
+                    {% elseif sortie.etat == 'Ouverte' %}
+                        <a href="{{ path('sortie_show', {'id': sortie.id}) }}">Afficher</a>
+                    {% elseif sortie.etat == 'Cloturée' %}
+                        <a href="{{ path('sortie_show', {'id': sortie.id}) }}">Afficher</a>
+                    {% elseif sortie.etat == 'Annulée' %}
+                        Annulée
+                    {% elseif sortie.etat == 'Terminée' %}
+                        Terminée
+                    {% elseif sortie.etat == 'Historisée' %}
+                        Historisée
+                    {% endif %}
                 </td>
             </tr>
         {% else %}

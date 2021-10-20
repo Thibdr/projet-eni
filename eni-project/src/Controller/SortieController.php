@@ -8,6 +8,7 @@ use App\Form\SortieType;
 use App\Form\FiltreSortieType;
 use App\Form\CreationSortieType;
 use App\Repository\SortieRepository;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,6 +17,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\LieuRepository;
 
 /**
+ * @IsGranted("ROLE_USER")
  * @Route("/sortie")
  */
 class SortieController extends AbstractController

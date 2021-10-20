@@ -97,7 +97,7 @@
             }
 
             // For example : return new RedirectResponse($this->urlGenerator->generate('some_route'));
-            return new RedirectResponse($this->urlGenerator->generate('app_login'));
+            return new RedirectResponse($this->urlGenerator->generate('sortie_index'));
         }
 
         protected function getLoginUrl()

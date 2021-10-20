@@ -125,7 +125,7 @@ class SortieController extends AbstractController
             throw $this->createAccessDeniedException("Vous n'avez pas le droit d'accéder à cette page", new NoConfigurationException());
         }
         if($sortie->getEtat() == 'Annulee') {
-            throw $this->createNotFoundException('La sortie est déjà annulée', new NoConfigurationException());
+            throw $this->createAccessDeniedException('La sortie est déjà annulée', new NoConfigurationException());
         }
 
         $form = $this->createFormBuilder()->add('motif', TextareaType::class, [
@@ -154,5 +154,34 @@ class SortieController extends AbstractController
             'sortie' => $sortie,
             'form' => $form,
         ]);
+    }
+
+    /**
+     * @Route("/{id}/inscription", name="sortie_inscription", methods={"GET"})
+     */
+    public function inscription(Request $request, Sortie $sortie): Response {
+        if($sortie->getOrganisateur()->getId() == $this->getUser()->getId()) {
+            throw $this->createAccessDeniedException("Vous ne pouvez pas vous inscrire à votre sortie", new NoConfigurationException());
+        }
+
+        $date = new \DateTime('today');
+        if($date > $sortie->getDateLimiteInscription()) {
+            throw $this->createAccessDeniedException("Il n'est plus possible de s'inscrire à cette sortie", new NoConfigurationException());
+        }
+
+        if($sortie->getEtat() != 'Ouverte') {
+            throw $this->createAccessDeniedException("Les inscriptions à la sortie ne sont pas ouvertes.", new NoConfigurationException());
+        }
+
+        if($sortie->getParticipant()->count() == $sortie->getNbInscriptionsMax()) {
+            throw $this->createAccessDeniedException("Il n'y a plus de places disponibles pour cette sortie.", new NoConfigurationException());
+        }
+
+        // Ajout de l'utilisateur à la liste des participants de la sortie
+        $sortie->addParticipant($this->getUser());
+        $this->getDoctrine()->getManager()->flush();
+
+        $this->addFlash('notice', 'Vous êtes inscrit à la sortie');
+        return $this->redirectToRoute('sortie_index', [], Response::HTTP_SEE_OTHER);
     }
 }

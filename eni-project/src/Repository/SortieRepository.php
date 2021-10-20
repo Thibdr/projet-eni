@@ -20,17 +20,35 @@ class SortieRepository extends ServiceEntityRepository
     }
 
     /**
-    * @return Sortie[] Retourne un tableau contenant les sorties par site
+    * Retourne une liste de sorties, filtrée selon les paramétres fournis
     */
-    public function findBySite($lieu)
-    {
-        $qb = $this->getEntityManager()->createQuery(
-            "SELECT s FROM App\Entity\Sortie s
-            WHERE (s.lieu = :lieu)"
-        );
-        $qb->setParameters(array(
-            ':lieu' => $lieu,
-        ));
-        return $qb->getResult();
+    public function findWithFilters($site,$words,$organisateur,$inscrit,$non_inscrit,$passees,$start,$end,$user){
+        $em = $this->getEntityManager();
+        $qb = $em->createQueryBuilder();
+
+        $qb->select('s')->from('App\Entity\Sortie', 's');
+
+        $site ? $qb->andWhere('s.lieu = :site')->setParameter('site',$site) : null;
+        $organisateur ? $qb->andWhere('s.organisateur = :user')->setParameter('user', $user) : null;
+        $inscrit ? $qb->andWhere(':user MEMBER OF s.participant')->setParameter('user', $user) : null;
+        $non_inscrit ? $qb->andWhere(':user NOT MEMBER OF s.participant')->setParameter('user',$user) : null;
+        $passees ? $qb->andWhere('s.dateHeureDebut < :now')->setParameter('now',new \DateTime('now')) : null;
+        
+        $words = explode(" ",$words);
+        foreach ($words as $key => $word) {
+            if (empty($word)) { continue; }
+            $qb->andWhere("s.nom LIKE :m{$key}")
+            ->setParameter("m{$key}", '%'.$word.'%');
+        };
+
+        if($start && $end){
+            $qb->andWhere('s.dateHeureDebut >  :start')
+            ->andWhere('s.dateHeureDebut <  :end')
+            ->setParameter('start', date('Y-m-d', strtotime(str_replace('/', '-', $start))))
+            ->setParameter('end', date('Y-m-d', strtotime(str_replace('/', '-', $end))));
+        }
+
+        $query = $qb->getQuery();
+        return $query->getResult();
     }
 }

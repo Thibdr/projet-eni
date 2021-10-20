@@ -3,7 +3,10 @@
 {% block title %}Sortie index{% endblock %}
 
 {% block body %}
-    <h1>Sortie index</h1>
+    <div class="user-info">
+        <p>Date du jour : {{ "now"|date("d/m/Y") }}</p>
+        <p>Participant : {{ user.getIdentite }}</p>
+    </div>
 
     <h3>Filtrer les sorties</h3>
 
@@ -33,8 +36,8 @@
                 <td>{{ sortie.nbInscriptionsMax }}</td>
                 <td>{{ sortie.informations }}</td>
                 <td>
-                    <a href="{{ path('sortie_show', {'id': sortie.id}) }}">show</a>
-                    <a href="{{ path('sortie_edit', {'id': sortie.id}) }}">edit</a>
+                    <a href="{{ path('sortie_show', {'id': sortie.id}) }}">Afficher</a>
+                    <a href="{{ path('sortie_edit', {'id': sortie.id}) }}">Editer</a>
                 </td>
             </tr>
         {% else %}

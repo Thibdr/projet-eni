@@ -235,6 +235,10 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    public function getIdentite(): ?string
+    {
+        return $this->prenom.' '.substr($this->nom, 0, 1).'.';
+    }
     /**
      * @return Collection|Sortie[]
      */

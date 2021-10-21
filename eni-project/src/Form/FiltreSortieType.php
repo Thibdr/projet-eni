@@ -38,7 +38,7 @@ class FiltreSortieType extends AbstractType
         ]);
 
         $builder->add('orga', CheckboxType::class, [
-            'label'    => 'Sorties dont je suis l\'organsateur/trice',
+            'label'    => 'Sorties dont je suis l\'organisateur/trice',
             'required' => false,
         ]);
 

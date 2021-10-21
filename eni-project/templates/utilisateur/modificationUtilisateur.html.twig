@@ -37,10 +37,20 @@
         value : app.user.mail
     })
     }}
-    {{ form_row(modificationUtilisateurForm.password, {
-        value : ""
-    })
-    }}
+
+        <label for="{{ field_name(modificationUtilisateurForm.password) }}">Mot de passe</label>
+        <input type="password"
+               id="{{ field_name(modificationUtilisateurForm.password) }}"
+               name="{{ field_name(modificationUtilisateurForm.password) }}"
+               value=""
+               placeholder=""
+               class="form-control"
+        >
+
+        {% for error in field_errors(modificationUtilisateurForm.password) %}
+            <div class="error">{{ error }}</div>
+        {% endfor %}
+
         <label for="{{ field_name(modificationUtilisateurForm.photo) }}"></label>
         <input type="file"
                 id="{{ field_name(modificationUtilisateurForm.photo) }}"

@@ -31,7 +31,7 @@ class UtilisateurController extends AbstractController
 
         if($form->isSubmitted() && $form->isValid()){
             $user = $this->getUser();
-            if($form->get('pseudo')->getData() != "" && $form->get('pseudo')->getData() != $user->getPseudo() ){
+            if($form->get('pseudo')->getData() != null && $form->get('pseudo')->getData() != $user->getPseudo() ){
                 $user->setPseudo($form->get('pseudo')->getData());
             }
             if($form->get('prenom')->getData() != null && $form->get('prenom')->getData() != $user->getPrenom() ){
@@ -51,7 +51,6 @@ class UtilisateurController extends AbstractController
                     $user,
                     $form->get('password')->getData()
                 ));
-                echo "password";
             }
             if($form->get('photo')->getData() != null && $_FILES[$form->getName('photo')]['name'] != $user->getPhoto()) {
                 $name = $_FILES[$form->getName('photo')]['name'];
@@ -61,12 +60,10 @@ class UtilisateurController extends AbstractController
                 move_uploaded_file($tmp['photo'], $nom);
 
                 $user->setPhoto($nom);
-                echo "photo";
             }
 
-            dd($user);
-            //$entityManager = $this->getDoctrine()->getManager();
-            //$entityManager->flush();
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->flush();
 
             return $this->redirectToRoute('utilisateur');
         }

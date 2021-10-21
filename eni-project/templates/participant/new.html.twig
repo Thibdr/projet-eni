@@ -1,0 +1,11 @@
+{% extends 'base-admin.html.twig' %}
+
+{% block title %}Administration - Nouveau participant{% endblock %}
+
+{% block content %}
+    <h3 class="text-uppercase text-secondary">Création d'un nouveau participant</h3>
+
+    {{ include('participant/_form.html.twig') }}
+
+    <a href="{{ path('participant_index') }}">back to list</a>
+{% endblock %}

@@ -2,11 +2,13 @@
 
 namespace App\Controller;
 
+use App\Entity\Participant;
 use App\Entity\Sortie;
 
 use App\Form\FiltreSortieType;
 use App\Form\CreationSortieType;
 use App\Repository\SortieRepository;
+use Doctrine\ORM\PersistentCollection;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -161,9 +163,9 @@ class SortieController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/inscription", name="sortie_inscription", methods={"GET"})
+     * @Route("/{id}/subscribe", name="sortie_subscribe", methods={"GET"})
      */
-    public function inscription(Request $request, Sortie $sortie): Response {
+    public function subscribe(Request $request, Sortie $sortie): Response {
         if($sortie->getOrganisateur()->getId() == $this->getUser()->getId()) {
             throw $this->createAccessDeniedException("Vous ne pouvez pas vous inscrire à votre sortie", new NoConfigurationException());
         }
@@ -187,5 +189,45 @@ class SortieController extends AbstractController
 
         $this->addFlash('notice', 'Vous êtes inscrit à la sortie');
         return $this->redirectToRoute('sortie_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    /**
+     * @Route("/{id}/unsubscribe", name="sortie_unsubscribe", methods={"GET"})
+     */
+    public function unsubscribe(Request $request, Sortie $sortie): Response {
+
+        $participants = $sortie->getParticipant();
+        if(!$this->isSubscriber($participants, $this->getUser())) {
+            throw $this->createAccessDeniedException("Vous n'êtes pas inscrit à cette sortie.", new NoConfigurationException());
+        }
+
+        $date = new \DateTime('now');
+        if($sortie->getDateHeureDebut() < $date) {
+            throw $this->createAccessDeniedException("La sortie a débutée, vous ne pouvez plus vous désinscrire.", new NoConfigurationException());
+        }
+
+        // Suppression de l'utilisateur de la liste des participants de la sortie
+        $sortie->removeParticipant($this->getUser());
+        $this->getDoctrine()->getManager()->flush();
+
+        $this->addFlash('notice', 'Vous êtes désinscrit de la sortie');
+        return $this->redirectToRoute('sortie_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    /**
+     * Check if the participant subscribe at the sortie
+     *
+     * @param PersistentCollection $participants
+     * @param Participant $user
+     * @return bool
+     */
+    private function isSubscriber(PersistentCollection $participants, Participant $user): bool {
+        foreach($participants as $participant) {
+            if($participant->getId() == $user->getId()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

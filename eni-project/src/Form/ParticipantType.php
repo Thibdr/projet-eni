@@ -2,10 +2,14 @@
 
 namespace App\Form;
 
+use App\Entity\Campus;
 use App\Entity\Participant;
+use App\Entity\Ville;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Type;
 
 class ParticipantType extends AbstractType
 {
@@ -13,16 +17,25 @@ class ParticipantType extends AbstractType
     {
         $builder
             ->add('pseudo')
-            ->add('roles')
             ->add('password')
             ->add('nom')
             ->add('prenom')
             ->add('telephone')
             ->add('mail')
-            ->add('actif')
-            ->add('photo')
-            ->add('sorties')
-            ->add('campus')
+            ->add('campus', EntityType::class, [
+                'attr' => [
+                    'class' => 'form-control'
+                ],
+                'choice_label' => 'nom',
+                'class' => Campus::class,
+                'constraints' => [
+                    new Type(['type' => 'App\Entity\Campus']),
+                ],
+                'label' => 'Campus',
+                'label_attr' => [
+                    'class' => 'col-form-label'
+                ]
+            ])
         ;
     }
 

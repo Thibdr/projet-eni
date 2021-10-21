@@ -1,0 +1,44 @@
+{% extends 'base-admin.html.twig' %}
+
+{% block title %}Administration - Liste des lieux{% endblock %}
+
+{% block content %}
+    <h3 class="text-uppercase text-secondary">Liste des lieux</h3>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nom</th>
+                <th>Rue</th>
+                <th>Ville</th>
+                <th>Latitude</th>
+                <th>Longitude</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for lieu in lieux %}
+            <tr>
+                <td>{{ lieu.id }}</td>
+                <td>{{ lieu.nom }}</td>
+                <td>{{ lieu.rue }}</td>
+                <td>{{ lieu.ville.codePostal }} {{ lieu.ville.nom }}</td>
+                <td>{{ lieu.latitude }}</td>
+                <td>{{ lieu.longitude }}</td>
+                <td>
+                    <a href="{{ path('lieu_show', {'id': lieu.id}) }}">show</a>
+                    <a href="{{ path('lieu_edit', {'id': lieu.id}) }}">edit</a>
+                    <a href="{{ path('lieu_delete', {'id': lieu.id}) }}">delete</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('lieu_new') }}" class="btn btn-primary">Nouveau lieu</a>
+{% endblock %}

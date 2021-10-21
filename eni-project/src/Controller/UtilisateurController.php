@@ -22,38 +22,51 @@ class UtilisateurController extends AbstractController
     /**
      * @Route("/modificationUtilisateur", name="modification_utilisateur")
      */
-    public function index(Request $request, UserPasswordHasherInterface $userPasswordHasherInterface): Response
+    public function Update(Request $request, UserPasswordHasherInterface $userPasswordHasherInterface): Response
     {
         if($this->getUser() != null) {
         $user = new Participant();
-        $user = $this->getUser();
         $form = $this->createForm(ModificationUtilisateurType::class, $user);
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid()){
-            if($form->get('pseudo')->getData() != null && $form->get('pseudo')->getData() != $user->getPseudo() ){
+            $user = $this->getUser();
+            if($form->get('pseudo')->getData() != "" && $form->get('pseudo')->getData() != $user->getPseudo() ){
                 $user->setPseudo($form->get('pseudo')->getData());
             }
-            if($form->get('prenom')->getData() != null){
+            if($form->get('prenom')->getData() != null && $form->get('prenom')->getData() != $user->getPrenom() ){
                 $user->setPrenom($form->get('prenom')->getData());
             }
-            if($form->get('nom')->getData() != null){
+            if($form->get('nom')->getData() != null && $form->get('nom')->getData() != $user->getNom()){
                 $user->setNom($form->get('nom')->getData());
             }
-            if($form->get('telephone')->getData() != null){
+            if($form->get('telephone')->getData() != null && $form->get('telephone')->getData() != $user->getTelephone()){
                 $user->setTelephone($form->get('telephone')->getData());
             }
-            if($form->get('mail')->getData() != null){
+            if($form->get('mail')->getData() != null && $form->get('mail')->getData() != $user->getMail()){
                 $user->setMail($form->get('mail')->getData());
             }
-            if($form->get('password')->getData() != null && $form->get('password')->getData() != $user->getPseudo())
-            $user->setPassword($userPasswordHasherInterface->hashPassword(
-                $user,
-                $form->get('password')->getData()
-            ));
+            if($form->get('password')->getData() != null && $userPasswordHasherInterface->hashPassword($user, $form->get('password')->getData()) != $user->getPassword()) {
+                $user->setPassword($userPasswordHasherInterface->hashPassword(
+                    $user,
+                    $form->get('password')->getData()
+                ));
+                echo "password";
+            }
+            if($form->get('photo')->getData() != null && $_FILES[$form->getName('photo')]['name'] != $user->getPhoto()) {
+                $name = $_FILES[$form->getName('photo')]['name'];
+                $tmp = $_FILES[$form->getName('photo')]['tmp_name'];
 
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->flush();
+                $nom = "../assets/image/{$name['photo']}";
+                move_uploaded_file($tmp['photo'], $nom);
+
+                $user->setPhoto($nom);
+                echo "photo";
+            }
+
+            dd($user);
+            //$entityManager = $this->getDoctrine()->getManager();
+            //$entityManager->flush();
 
             return $this->redirectToRoute('utilisateur');
         }
@@ -69,7 +82,7 @@ class UtilisateurController extends AbstractController
     /**
      * @Route("/afficheutilisateur/{id}", name="affiche_utilisateur" , methods={"GET"})
      */
-    public function AfficheUtilisateur(Participant $participant): Response
+    public function Show(Participant $participant): Response
     {
         if($participant != null) {
             return $this->render('affiche_utilisateur/afficheUtilisateur.html.twig', [

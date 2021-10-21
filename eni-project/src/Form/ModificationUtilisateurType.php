@@ -21,9 +21,6 @@ class ModificationUtilisateurType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            /**
-             * @Assert\
-             */
             ->add('pseudo')
             //->add('roles')
             ->add('password', PasswordType::class)

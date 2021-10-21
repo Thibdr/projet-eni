@@ -3,7 +3,13 @@
 {% block title %}Hello UtilisateurController!{% endblock %}
 
 {% block body %}
+
+    {% if error %}
+        <div class="alert alert-danger">{{ error }}</div>
+    {% endif %}
+
     {{ form_start(modificationUtilisateurForm) }}
+
     <div class="groupe">
         <label for="{{ field_name(modificationUtilisateurForm.pseudo) }}">Pseudo</label>
         <input type="text"

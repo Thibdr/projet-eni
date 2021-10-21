@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Administration {% endblock %}
+
+{% block body %}
+    <h1 class="text-center text-primary">Administration</h1>
+
+    <div class="row mt-5">
+        <div class="col-2">
+            <ul class="list-group">
+                <li class="list-group-item"><a href="#">Utilisateurs</a></li>
+                <li class="list-group-item"><a href="#">Lieux</a></li>
+                <li class="list-group-item"><a href="#">Villes</a></li>
+            </ul>
+        </div>
+        <div class="col-9">
+            {% block content %} {% endblock %}
+
+        </div>
+    </div>
+
+{% endblock %}

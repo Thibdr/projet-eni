@@ -74,6 +74,6 @@
     <button type="submit" class="btn btn-primary">Enregistrer</button>
     <button type="reset" class="btn btn-secondary">Annuler</button>
     {{ form_end(modificationUtilisateurForm) }}
-
-    <img src="../{{ app.user.photo }}" alt="">
+    {{ app.user.photo }}
+    <img src="{{ asset(app.user.photo) }}" alt="">
 {% endblock %}

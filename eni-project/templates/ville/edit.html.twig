@@ -1,9 +1,9 @@
-{% extends 'base-admin.html.twig' %}
+{% extends 'base.html.twig' %}
 
-{% block title %}Administration - Modification d'une ville{% endblock %}
+{% block title %}Modification d'une ville{% endblock %}
 
-{% block content %}
-    <h3 class="text-uppercase text-secondary">Modification d'une ville</h3>
+{% block body %}
+    <h1 class="text-center text-primary">Modification d'une ville</h1>
 
     {{ include('ville/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
 {% endblock %}

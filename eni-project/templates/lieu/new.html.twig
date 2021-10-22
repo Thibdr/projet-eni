@@ -1,9 +1,9 @@
-{% extends 'base-admin.html.twig' %}
+{% extends 'base.html.twig' %}
 
-{% block title %}Administration - Nouveau lieu{% endblock %}
+{% block title %}Nouveau lieu{% endblock %}
 
-{% block content %}
-    <h3 class="text-uppercase text-secondary">Création d'un nouveau lieu</h3>
+{% block body %}
+    <h1 class="text-center text-primary">Création d'un nouveau lieu</h1>
 
     {{ include('lieu/_form.html.twig') }}
 {% endblock %}

@@ -1,9 +1,9 @@
 {% extends 'base-admin.html.twig' %}
 
-{% block title %}Administration - Modification d'un lieu{% endblock %}
+{% block title %}Modification d'un lieu{% endblock %}
 
-{% block content %}
-    <h3 class="text-uppercase text-secondary">Modification d'un lieu</h3>
+{% block body %}
+    <h1 class="text-center text-primary">Modification d'un lieu</h1>
 
     {{ include('lieu/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
 {% endblock %}

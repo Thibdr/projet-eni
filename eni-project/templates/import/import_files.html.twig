@@ -1,0 +1,30 @@
+{% extends 'base-admin.html.twig' %}
+
+{% block title %}Importer des fichiers{% endblock %}
+
+{% block content %}
+    <h3 class="text-uppercase text-secondary">Importer des utilisateurs</h3>
+    {{ include('import/_form.import_files.html.twig') }}
+
+    <div class='import-warning'>
+        <p>Si l'import de votre fichier affiche une erreur, la structure de votre fichier est incorrect.</p>
+    </div>
+    {% for message in app.flashes('import-success') %}
+        <div class="flash-import-success">
+            {{ message }}
+        </div>
+    {% endfor %}
+    {% for message in app.flashes('import') %}
+        <div class="flash-imported">
+            {{ message }}
+        </div>
+    {% endfor %}
+    {% for message in app.flashes('!import') %}
+        <div class="flash-not-imported">
+            {{ message }}
+        </div>
+    {% endfor %}
+    {% block javascripts %}
+        {{ encore_entry_script_tags('app') }}
+    {% endblock %}
+{% endblock %}

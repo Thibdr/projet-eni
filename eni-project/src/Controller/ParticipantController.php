@@ -4,11 +4,13 @@ namespace App\Controller;
 
 use App\Entity\Participant;
 use App\Form\ParticipantType;
+use App\Form\ImportType;
 use App\Repository\ParticipantRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Factory\ImportFactory;
 
 /**
  * @Route("/participant")
@@ -45,6 +47,38 @@ class ParticipantController extends AbstractController
         return $this->renderForm('participant/new.html.twig', [
             'participant' => $participant,
             'form' => $form,
+        ]);
+    }
+
+    /**
+     * @Route("/import", name="participant_import", methods={"GET","POST"})
+     */
+    public function import(Request $request, ImportFactory $iFactory): Response
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $form = $this->createForm(ImportType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            /** @var UploadedFile $csvFile */
+            $csvFile = $form->get('donnees')->getData();
+
+            $process = $iFactory->import($csvFile);
+
+            $this->addFlash('import-success', 'Importation réussi :');
+            $this->addFlash('import', $process['imported'].' utilisateur(s) ajouté(s)');
+            if($process['!imported'] > 0){
+                $this->addFlash('!import', $process['!imported'].' utilisateur(s) non ajouté(s)');
+                $this->addFlash('!import', 'Le pseudo existe déjà, ou le nom du campus est incorrect');
+            }
+
+            return $this->render('import/import_files.html.twig', [
+                'form' => $form->createView()
+            ]);
+        }
+        return $this->render('import/import_files.html.twig', [
+            'form' => $form->createView()
         ]);
     }
 

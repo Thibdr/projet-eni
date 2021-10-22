@@ -49,16 +49,6 @@ class LieuController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="lieu_show", methods={"GET"})
-     */
-    public function show(Lieu $lieu): Response
-    {
-        return $this->render('lieu/show.html.twig', [
-            'lieu' => $lieu,
-        ]);
-    }
-
-    /**
      * @Route("/{id}/edit", name="lieu_edit", methods={"GET","POST"})
      */
     public function edit(Request $request, Lieu $lieu): Response

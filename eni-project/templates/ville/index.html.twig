@@ -3,9 +3,10 @@
 {% block title %}Administration - Liste des villes{% endblock %}
 
 {% block content %}
-    <h3 class="text-uppercase text-secondary">Liste des villes</h3>
+    <h3 class="text-uppercase text-secondary mb-5">Liste des villes</h3>
+    <a href="{{ path('ville_new') }}" class="btn btn-primary">Nouvelle ville</a>
 
-    <table class="table">
+    <table class="table text-center mt-3">
         <thead>
             <tr>
                 <th>Id</th>
@@ -21,9 +22,15 @@
                 <td>{{ ville.nom }}</td>
                 <td>{{ ville.codePostal }}</td>
                 <td>
-                    <a href="{{ path('ville_show', {'id': ville.id}) }}">show</a>
-                    <a href="{{ path('ville_edit', {'id': ville.id}) }}">edit</a>
-                    <a href="{{ path('ville_delete', {'id': ville.id}) }}">delete</a>
+                    <div class="d-flex">
+                        <div class="flex-fill">
+                            <a href="{{ path('ville_edit', {'id': ville.id}) }}" class="btn btn-primary">Modifier</a>
+                        </div>
+                        <div class="flex-fill">
+                            {{ include('ville/_delete_form.html.twig') }}
+
+                        </div>
+                    </div>
                 </td>
             </tr>
         {% else %}
@@ -34,5 +41,4 @@
         </tbody>
     </table>
 
-    <a href="{{ path('ville_new') }}" class="btn btn-primary">Nouveau ville</a>
 {% endblock %}

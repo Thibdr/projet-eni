@@ -69,7 +69,7 @@ class UtilisateurController extends AbstractController
                 $name = $_FILES[$form->getName('photo')]['name'];
                 $tmp = $_FILES[$form->getName('photo')]['tmp_name'];
 
-                $nom = "../public/assets/".$name['photo'];
+                $nom = "../public/assets/image".$name['photo'];
                 move_uploaded_file($tmp['photo'], $nom);
                 $user->setPhoto($nom);
             }

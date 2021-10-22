@@ -7,6 +7,7 @@ use App\Entity\Participant;
 use App\Entity\Ville;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Type;
@@ -18,6 +19,12 @@ class ParticipantType extends AbstractType
         $builder
             ->add('pseudo')
             ->add('password')
+            ->add('roles', ChoiceType::class,[
+                'expanded' => true,
+                'multiple' => true,
+                'choices' => $this->getCivility(),
+                'label' => 'Role',
+            ])
             ->add('nom')
             ->add('prenom')
             ->add('telephone')
@@ -36,6 +43,7 @@ class ParticipantType extends AbstractType
                     'class' => 'col-form-label'
                 ]
             ])
+            ->add('actif')
         ;
     }
 
@@ -44,5 +52,12 @@ class ParticipantType extends AbstractType
         $resolver->setDefaults([
             'data_class' => Participant::class,
         ]);
+    }
+
+    private function getCivility() : array {
+        return [
+            'Utilisateur' => "ROLE_USER",
+            'Administrateur' => "ROLE_ADMIN"
+        ];
     }
 }

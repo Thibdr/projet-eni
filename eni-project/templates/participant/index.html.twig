@@ -10,13 +10,13 @@
             <tr>
                 <th>Id</th>
                 <th>Pseudo</th>
+                <th>Campus</th>
                 <th>Roles</th>
                 <th>Nom</th>
                 <th>Prenom</th>
                 <th>Telephone</th>
                 <th>Mail</th>
                 <th>Actif</th>
-                <th>Photo</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -25,21 +25,21 @@
             <tr>
                 <td>{{ participant.id }}</td>
                 <td>{{ participant.pseudo }}</td>
+                <td>{{ participant.campus.nom }}</td>
                 <td>{{ participant.roles ? participant.roles|json_encode : '' }}</td>
                 <td>{{ participant.nom }}</td>
                 <td>{{ participant.prenom }}</td>
                 <td>{{ participant.telephone }}</td>
                 <td>{{ participant.mail }}</td>
-                <td>{{ participant.actif ? 'Yes' : 'No' }}</td>
-                <td>{{ participant.photo }}</td>
+                <td>{{ participant.actif ? 'Oui' : 'Non' }}</td>
                 <td>
-                    <a href="{{ path('participant_show', {'id': participant.id}) }}">show</a>
-                    <a href="{{ path('participant_edit', {'id': participant.id}) }}">edit</a>
+                    <a href="{{ path('participant_show', {'id': participant.id}) }}">Afficher</a>
+                    <a href="{{ path('participant_edit', {'id': participant.id}) }}">Modifier</a>
                 </td>
             </tr>
         {% else %}
             <tr>
-                <td colspan="11">no records found</td>
+                <td colspan="11">Aucun résultat ne correspond à votre recherche</td>
             </tr>
         {% endfor %}
         </tbody>

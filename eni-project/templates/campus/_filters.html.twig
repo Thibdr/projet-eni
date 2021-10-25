@@ -1,0 +1,13 @@
+{{ form_start(filterForm) }}
+    
+    <div class="row">
+        <div class="col">
+            <div class="form-group">
+                {{ form_widget(filterForm.nom) }}
+            </div>
+        </div>
+        <div class="col">
+            <button class="btn btn-primary">{{ button_label|default('Rechercher') }}</button>
+        </div>
+    </div>
+{{ form_end(filterForm) }}

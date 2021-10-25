@@ -1,50 +1,52 @@
-{% extends 'base-admin.html.twig' %}
+{% extends 'base.html.twig' %}
 
-{% block title %}Administration - Liste des lieux{% endblock %}
+{% block title %}Gestion des lieux{% endblock %}
 
-{% block content %}
-    <h3 class="text-uppercase text-secondary mb-5">Liste des lieux</h3>
-    <a href="{{ path('lieu_new') }}" class="btn btn-primary">Nouveau lieu</a>
+{% block body %}
+    <h1 class="text-center text-primary mb-5">Gestion des lieux</h1>
 
-    <table class="table text-center mt-3">
-        <thead>
-        <tr>
-            <th>Id</th>
-            <th>Nom</th>
-            <th>Rue</th>
-            <th>Ville</th>
-            <th>Latitude</th>
-            <th>Longitude</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for lieu in lieux %}
+    <div class="mx-lg-2">
+        <a href="{{ path('lieu_new') }}" class="btn btn-primary">Nouveau lieu</a>
+
+        <table class="table text-center mt-3">
+            <thead>
             <tr>
-                <td>{{ lieu.id }}</td>
-                <td>{{ lieu.nom }}</td>
-                <td>{{ lieu.rue }}</td>
-                <td>{{ lieu.ville.codePostal }} {{ lieu.ville.nom }}</td>
-                <td>{{ lieu.latitude }}</td>
-                <td>{{ lieu.longitude }}</td>
-                <td>
-                    <div class="d-flex">
-                        <div class="flex-fill">
-                            <a href="{{ path('lieu_edit', {'id': lieu.id}) }}" class="btn btn-primary">Modifier</a>
-                        </div>
-                        <div class="flex-fill">
-                            {{ include('lieu/_delete_form.html.twig') }}
-
-                        </div>
-                    </div>
-                </td>
+                <th>Id</th>
+                <th>Nom</th>
+                <th>Rue</th>
+                <th>Ville</th>
+                <th>Latitude</th>
+                <th>Longitude</th>
+                <th>Actions</th>
             </tr>
-        {% else %}
-            <tr>
-                <td colspan="6">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+            {% for lieu in lieux %}
+                <tr>
+                    <td>{{ lieu.id }}</td>
+                    <td>{{ lieu.nom }}</td>
+                    <td>{{ lieu.rue }}</td>
+                    <td>{{ lieu.ville.codePostal }} {{ lieu.ville.nom }}</td>
+                    <td>{{ lieu.latitude }}</td>
+                    <td>{{ lieu.longitude }}</td>
+                    <td>
+                        <div class="d-flex">
+                            <div class="flex-fill">
+                                <a href="{{ path('lieu_edit', {'id': lieu.id}) }}" class="btn btn-primary">Modifier</a>
+                            </div>
+                            <div class="flex-fill">
+                                {{ include('lieu/_delete_form.html.twig') }}
 
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6">no records found</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
 {% endblock %}

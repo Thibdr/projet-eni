@@ -5,5 +5,15 @@
 {% block body %}
     <h1 class="text-center text-primary">Modification d'une ville</h1>
 
-    {{ include('ville/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
+    <div class="row justify-content-md-center my-5">
+        <div class="col-6 p-4 bg-white border border-secondary rounded">
+            {{ form_start(form) }}
+                {{ form_widget(form) }}
+                <div class="text-center">
+                    <a href="{{ path('ville_index') }}" class="btn btn-secondary">Retour à la liste</a>
+                    <button class="btn btn-primary">{{ button_label|default('Mettre à jour') }}</button>
+                </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
 {% endblock %}

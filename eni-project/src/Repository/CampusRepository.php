@@ -23,7 +23,7 @@ class CampusRepository extends ServiceEntityRepository
       * @return Campus[] Returns an array of Campus objects
       */
 
-    public function findByName($name)
+    public function findByName($name): array
     {
         $qb = $this->createQueryBuilder('s');
 

@@ -1,12 +1,22 @@
-{% extends 'base-admin.html.twig' %}
+{% extends 'base.html.twig' %}
 
 {% block title %}Modification d'un campus{% endblock %}
 
-{% block content %}
-    <h3 class="text-uppercase text-secondary">Modification d'un campus</h3>
+{% block body %}
+    <h1 class="text-center text-primary">Modification d'un campus</h1>
 
-    {{ form_start(form) }}
-        {{ form_widget(form) }}
-        <button class="btn btn-primary">{{ button_label|default('Mettre à jour') }}</button>
-    {{ form_end(form) }}
+    <div class="row justify-content-md-center my-5">
+        <div class="col-6 p-4 bg-white border border-secondary rounded">
+            {{ form_start(form) }}
+                {{ form_widget(form) }}
+                <div class="text-center">
+                    <a href="{{ path('campus_index') }}" class="btn btn-secondary">Retour à la liste</a>
+                    <button class="btn btn-primary">{{ button_label|default('Mettre à jour') }}</button>
+                </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+
+
+
 {% endblock %}

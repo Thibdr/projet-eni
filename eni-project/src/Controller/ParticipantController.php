@@ -13,7 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Factory\ImportFactory;
 
 /**
- * @Route("/participant")
+ * @Route("admin/participant")
  */
 class ParticipantController extends AbstractController
 {

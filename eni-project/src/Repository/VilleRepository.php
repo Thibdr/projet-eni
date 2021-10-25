@@ -19,22 +19,23 @@ class VilleRepository extends ServiceEntityRepository
         parent::__construct($registry, Ville::class);
     }
 
-    // /**
-    //  * @return Ville[] Returns an array of Ville objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * @return Ville[] Returns an array of Campus objects
+     */
+
+    public function findByName($name): array
     {
-        return $this->createQueryBuilder('v')
-            ->andWhere('v.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('v.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+        $qb = $this->createQueryBuilder('v');
+
+        $words = explode(" ",$name);
+        foreach ($words as $key => $word) {
+            $qb->andWhere("v.nom LIKE :name")
+                ->setParameter("name", '%'.$word.'%');
+        };
+
+        $query = $qb->getQuery();
+        return $query->getResult();
     }
-    */
 
     /*
     public function findOneBySomeField($value): ?Ville

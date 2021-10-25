@@ -4,19 +4,16 @@ namespace App\Controller;
 
 use App\Entity\Campus;
 use App\Form\CampusType;
-use App\Form\FilterCampusType;
-use App\Form\FiltreSortieType;
 use App\Repository\CampusRepository;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @IsGranted("ROLE_ADMIN")
- * @Route("/campus")
+ * @Route("/admin/campus")
  */
 class CampusController extends AbstractController
 {
@@ -38,14 +35,7 @@ class CampusController extends AbstractController
             return $this->redirectToRoute('campus_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        $filterForm = $this->createFormBuilder()
-            ->add('nom', TextType::class, [
-                'attr' => [
-                    'class' => ' form-control'
-                ],
-                'required' => false
-            ])->getForm();
-
+        $filterForm = $this->getFilterForm();
         $filterForm->handleRequest($request);
 
         if ($filterForm->isSubmitted() && $filterForm->isValid()) {
@@ -102,6 +92,22 @@ class CampusController extends AbstractController
         }
 
         return $this->redirectToRoute('campus_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    /**
+     * Return filter form
+     *
+     * @return FormInterface
+     */
+    private function getFilterForm(): FormInterface {
+        return $this->createFormBuilder()
+            ->add('nom', TextType::class, [
+                'attr' => [
+                    'class' => ' form-control'
+                ],
+                'label' => 'Le nom contient : ',
+                'required' => false
+            ])->getForm();
     }
 
     /**

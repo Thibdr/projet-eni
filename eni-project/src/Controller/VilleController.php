@@ -5,34 +5,25 @@ namespace App\Controller;
 use App\Entity\Ville;
 use App\Form\VilleType;
 use App\Repository\VilleRepository;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @IsGranted("ROLE_USER")
- * @Route("/villes")
+ * @Route("/admin/villes")
  */
 class VilleController extends AbstractController
 {
     /**
-     * @Route("/", name="ville_index", methods={"GET"})
+     * @Route("/", name="ville_index", methods={"GET", "POST"})
      */
-    public function index(VilleRepository $villeRepository): Response
-    {
-        return $this->render('ville/index.html.twig', [
-            'villes' => $villeRepository->findAll(),
-        ]);
-    }
-
-    /**
-     * @Route("/new", name="ville_new", methods={"GET","POST"})
-     */
-    public function new(Request $request): Response
+    public function index(Request $request, VilleRepository $villeRepository): Response
     {
         $ville = new Ville();
+
         $form = $this->createForm(VilleType::class, $ville);
         $form->handleRequest($request);
 
@@ -44,11 +35,30 @@ class VilleController extends AbstractController
             return $this->redirectToRoute('ville_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('ville/new.html.twig', [
+        $filterForm = $this->getFilterForm();
+        $filterForm->handleRequest($request);
+
+        if ($filterForm->isSubmitted() && $filterForm->isValid()) {
+            $data = (object) $filterForm->getData();
+            $nom = $data->nom;
+
+            if(!empty($nom)) {
+                $villes = $villeRepository->findByName($nom);
+            } else {
+                $villes = $this->getAllCities($villeRepository);
+            }
+        } else {
+            $villes = $this->getAllCities($villeRepository);
+        }
+
+        return $this->renderForm('ville/index.html.twig', [
+            'villes' => $villes,
             'ville' => $ville,
             'form' => $form,
+            'filterForm' => $filterForm,
         ]);
     }
+
 
     /**
      * @Route("/{id}/edit", name="ville_edit", methods={"GET","POST"})
@@ -82,5 +92,31 @@ class VilleController extends AbstractController
         }
 
         return $this->redirectToRoute('ville_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    /**
+     * Return filter form
+     *
+     * @return FormInterface
+     */
+    private function getFilterForm(): FormInterface {
+        return $this->createFormBuilder()
+            ->add('nom', TextType::class, [
+                'attr' => [
+                    'class' => ' form-control'
+                ],
+                'label' => 'Le nom contient : ',
+                'required' => false
+            ])->getForm();
+    }
+
+    /**
+     * Return all cities
+     *
+     * @param VilleRepository $villeRepository
+     * @return array
+     */
+    private function getAllCities(VilleRepository $villeRepository): array {
+        return $villeRepository->findAll();
     }
 }

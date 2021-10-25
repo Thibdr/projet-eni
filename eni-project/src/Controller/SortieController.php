@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Participant;
 use App\Entity\Sortie;
 
+use App\Form\AnnulationSortieType;
 use App\Form\FiltreSortieType;
 use App\Form\CreationSortieType;
 use App\Repository\SortieRepository;
@@ -127,22 +128,18 @@ class SortieController extends AbstractController
      */
     public function cancel(Request $request, Sortie $sortie): Response
     {
-        if($this->getUser()->getId() != $sortie->getOrganisateur()->getId()) {
+        $isAdmin = $this->container->get('security.authorization_checker')->isGranted('ROLE_ADMIN');
+
+        if(!$isAdmin && $this->getUser()->getId() != $sortie->getOrganisateur()->getId()) {
             throw $this->createAccessDeniedException("Vous n'avez pas le droit d'accéder à cette page", new NoConfigurationException());
         }
-        if($sortie->getEtat() == 'Annulee') {
-            throw $this->createAccessDeniedException('La sortie est déjà annulée', new NoConfigurationException());
+
+        $date = new \DateTime('now');
+        if($sortie->getEtat() == "En création" || $sortie->getDateHeureDebut() < $date) {
+            throw $this->createAccessDeniedException('Vous ne pouvez pas annuler la sortie', new NoConfigurationException());
         }
 
-        $form = $this->createFormBuilder()->add('motif', TextareaType::class, [
-                'attr' => [
-                    'class' => 'form-control'
-                ],
-                'label' => 'Motif',
-                'label_attr' => [
-                    'class' => 'col-form-label'
-                ],
-            ])->getForm();
+        $form = $this->createForm(AnnulationSortieType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

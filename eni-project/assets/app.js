@@ -2,7 +2,6 @@
 // Librairie
 import 'bootstrap'
 import 'jquery'
-import 'bootstrap-select'
 import 'bootstrap-datepicker'
 
 // Fichier SCSS

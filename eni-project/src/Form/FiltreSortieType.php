@@ -27,8 +27,7 @@ class FiltreSortieType extends AbstractType
             'required'   => false,
             'empty_data' => null,
             'attr' => [
-                'placeholder' => null,
-                //'class' => 'selectpicker'
+                'placeholder' => 'Sélectionner ...'
             ],
         ]);
 

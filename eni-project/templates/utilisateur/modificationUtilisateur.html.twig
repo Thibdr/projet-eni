@@ -10,19 +10,10 @@
 
     {{ form_start(modificationUtilisateurForm) }}
 
-    <div class="groupe">
-        <label for="{{ field_name(modificationUtilisateurForm.pseudo) }}">Pseudo</label>
-        <input type="text"
-               id="{{ field_name(modificationUtilisateurForm.pseudo) }}"
-               name="{{ field_name(modificationUtilisateurForm.pseudo) }}"
-               value="{{ app.user.pseudo }}"
-               class="form-control"
-        >
-
-        {% for error in field_errors(modificationUtilisateurForm.pseudo) %}
-            <div class="error">{{ error }}</div>
-        {% endfor %}
-
+    {{ form_row(modificationUtilisateurForm.pseudo, {
+        value : app.user.pseudo
+    })
+    }}
 
     {{ form_row(modificationUtilisateurForm.prenom, {
         value : app.user.prenom
@@ -44,35 +35,23 @@
     })
     }}
 
-        <label for="{{ field_name(modificationUtilisateurForm.password) }}">Mot de passe</label>
-        <input type="password"
-               id="{{ field_name(modificationUtilisateurForm.password) }}"
-               name="{{ field_name(modificationUtilisateurForm.password) }}"
-               value=""
-               placeholder=""
-               class="form-control"
-        >
+    {{ form_row(modificationUtilisateurForm.password, {
+        value : ''
+    })
+    }}
 
-        {% for error in field_errors(modificationUtilisateurForm.password) %}
-            <div class="error">{{ error }}</div>
-        {% endfor %}
-
-        <label for="{{ field_name(modificationUtilisateurForm.photo) }}"></label>
-        <input type="file"
-                id="{{ field_name(modificationUtilisateurForm.photo) }}"
-                name="{{ field_name(modificationUtilisateurForm.photo) }}"
-                value=""
-                placeholder=""
-                class="form-control"
-        >
-
-        {% for error in field_errors(modificationUtilisateurForm.photo) %}
-            <div class="error">{{ error }}</div>
-        {% endfor %}
-    </div>
+    <div class='import-form'>
+            {{ form_label(modificationUtilisateurForm.photo) }}
+            {{ form_widget(modificationUtilisateurForm.photo) }}
+            <div class="form-error">
+                {{ form_errors(modificationUtilisateurForm.photo) }}
+            </div>
+        </div>
 
     <button type="submit" class="btn btn-primary">Enregistrer</button>
     <button type="reset" class="btn btn-secondary">Annuler</button>
+
     {{ form_end(modificationUtilisateurForm) }}
     <img src="{{ asset(app.user.photo) }}" alt="">
+    </div>
 {% endblock %}

@@ -13,10 +13,13 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Validator\Constraints\Unique;
+use Symfony\Component\Validator\Constraints\ZeroComparisonConstraintTrait;
 
 class ModificationUtilisateurType extends AbstractType
 {
@@ -38,19 +41,16 @@ class ModificationUtilisateurType extends AbstractType
             ])
             //->add('roles')
             ->add('password', PasswordType::class, [
-                'constraints' => [
-                    new NotBlank(['message' => 'Veuillez renseigner un mot de passe']),
-                ],
-                new Length([
-                    'min' => 6,
-                    'minMessage' => 'Votre mot de passe doit avoir au moins {{ limit }} caractères',
-                    // max length allowed by Symfony for security reasons
-                    'max' => 4096,
-                ]),
+                'required' => false,
             ])
+
             ->add('nom', TextType::class, [
         'constraints' => [
             new NotBlank(['message' => 'Veuillez renseigner un pseudo']),
+            new Regex([
+                'pattern' => '/^[a-zA-Z]+$/',
+                'message' => 'Le nom doit être au bon format'
+            ]),
             new Length([
                 'min' => 3,
                 'max' => 50,
@@ -64,6 +64,10 @@ class ModificationUtilisateurType extends AbstractType
             ->add('prenom', TextType::class, [
         'constraints' => [
             new NotBlank(['message' => 'Veuillez renseigner un pseudo']),
+            new Regex([
+                    'pattern' => '/^[a-zA-Z]+$/',
+                    'message' => 'Le prénom doit être au bon format'
+            ]),
             new Length([
                 'min' => 3,
                 'max' => 50,
@@ -74,10 +78,40 @@ class ModificationUtilisateurType extends AbstractType
             'class' => 'col-form-label'
         ]
     ])
-            ->add('telephone', TelType::class)
-            ->add('mail', EmailType::class)
-            ->add('photo', FileType::class)
-        ;
+            ->add('telephone', TelType::class, [
+                'constraints' => [
+                    new NotBlank(['message' => 'Veuillez renseigner un numéro de téléphone']),
+                    new Regex([
+                        'pattern' => '/^(?:(?:\+|00)33[\s.-]{0,3}(?:\(0\)[\s.-]{0,3})?|0)[1-9](?:(?:[\s.-]?\d{2}){4}|\d{2}(?:[\s.-]?\d{3}){2})$/',
+                        'message' => 'Le numéro de téléphone doit être au bon format'
+                    ])
+                ],
+            ])
+            ->add('mail', EmailType::class, [
+                'constraints' => [
+                    new NotBlank(['message' => 'Veuillez renseigner une adresse mail']),
+                    new Regex([
+                        'pattern' => '/^[-0-9a-zA-Z.+_]+@[-0-9a-zA-Z.+_]+.[a-zA-Z]{2,4}$/',
+                        'message' => 'L\'adresse mail doit être au bon format'
+                    ])
+                ],
+            ])
+            ->add('photo', FileType::class, [
+                'label' => 'Photo',
+                'required' => false,
+                'constraints' => [
+                    new File([
+                        'mimeTypes' => [
+                            'image/png',
+                            'image/jpg',
+                            'image/jpeg'
+                        ],
+                        'mimeTypesMessage' => 'Veuillez choisir une image au bon format (PNG, JPG, JPEG)',
+                        'maxSize' => '10M',
+                        'maxSizeMessage' => 'Taille maximal dépassée',
+                    ]),
+                ]
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

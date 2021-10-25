@@ -34,6 +34,7 @@ class UtilisateurController extends AbstractController
         if($form->isSubmitted() && $form->isValid()){
             $user = $this->getUser();
             $table = $tableRepo->findAll();
+
             for($i = 0; $i<count($table); $i++){
                 if($user->getPseudo() != $form->get('pseudo')->getData() && $table[$i]->getPseudo() == $form->get('pseudo')->getData()) {
                     $error = "Le nom du pseudo est déjà existant";

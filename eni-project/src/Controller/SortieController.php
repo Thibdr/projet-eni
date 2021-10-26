@@ -2,12 +2,13 @@
 
 namespace App\Controller;
 
+use App\Entity\Lieu;
 use App\Entity\Participant;
 use App\Entity\Sortie;
 
 use App\Form\AnnulationSortieType;
 use App\Form\FiltreSortieType;
-use App\Form\CreationSortieType;
+use App\Form\SortieType;
 use App\Repository\SortieRepository;
 use Doctrine\ORM\PersistentCollection;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -69,17 +70,35 @@ class SortieController extends AbstractController
     public function new(Request $request): Response
     {
         $sortie = new Sortie();
-
-        $form = $this->createForm(CreationSortieType::class, $sortie);
+        $form = $this->createForm(SortieType::class, $sortie);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $sortie->setEtat('En création');
+            $entityManager = $this->getDoctrine()->getManager();
+
+            $nouveauLieu = $form->get('nomLieu')->getData();
+            $lieuExistant = $form->get('lieu')->getData();
+            if($nouveauLieu == null && $lieuExistant == null) {
+
+            }
+            if($nouveauLieu != null) {
+                $lieu = new Lieu();
+                $lieu->setNom($nouveauLieu);
+                $lieu->setVille($form->get('ville')->getData());
+                $lieu->setRue($form->get('rue')->getData());
+                $lieu->setLatitude($form->get('latitude')->getData());
+                $lieu->setLongitude($form->get('longitude')->getData());
+                $sortie->setLieu($lieu);
+                $entityManager->persist($lieu);
+            }
+
+
+            $etat = ($form->getClickedButton()->getName() === 'save') ? 'En cours' : 'Ouverte';
+            $sortie->setEtat($etat);
             $user = $this->getUser();
             $sortie->setOrganisateur($user);
             $sortie->setCampus($user->getCampus());
 
-            $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($sortie);
             $entityManager->flush();
 
@@ -108,10 +127,13 @@ class SortieController extends AbstractController
      */
     public function edit(Request $request, Sortie $sortie): Response
     {
-        $form = $this->createForm(CreationSortieType::class, $sortie);
+        $form = $this->createForm(SortieType::class, $sortie);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $etat = ($form->getClickedButton()->getName() === 'save') ? 'En cours' : 'Ouverte';
+            $sortie->setEtat($etat);
+
             $this->getDoctrine()->getManager()->flush();
 
             return $this->redirectToRoute('sortie_index', [], Response::HTTP_SEE_OTHER);

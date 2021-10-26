@@ -4,8 +4,9 @@
 
 {% block body %}
 
-    {% if error %}
-        <div class="alert alert-danger">{{ error }}</div>
+
+    {% if success %}
+        <div class="alert alert-success">{{ success }}</div>
     {% endif %}
 
     {{ form_start(modificationUtilisateurForm) }}
@@ -14,6 +15,10 @@
         value : app.user.pseudo
     })
     }}
+
+    {% if error %}
+        <div class="alert alert-danger">{{ error }}</div>
+    {% endif %}
 
     {{ form_row(modificationUtilisateurForm.prenom, {
         value : app.user.prenom

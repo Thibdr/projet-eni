@@ -8,6 +8,7 @@
 /var/
 /vendor/
 /public/.htaccess
+/public/assets/images/
 /.idea/
 ###< symfony/framework-bundle ###
 

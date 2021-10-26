@@ -22,10 +22,44 @@
         </div>
         <div class="col">
             <div class="form-group">
-                {{ form_row(form.lieu) }}
+                {{ form_row(form.ville) }}
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    Lieu existant
+                </div>
+                <div class="card-body">
+                    {{ form_widget(form.lieu) }}
+                    {{ form_errors(form.lieu) }}
+                </div>
+            </div>
+            <div class="card mt-3">
+                <div class="card-header">
+                    Nouveau lieu
+                </div>
+                <div class="card-body py-2">
+                    <div class="form-group">
+                        {{ form_row(form.nomLieu) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_row(form.rue) }}
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-sm">
+                            {{ form_row(form.latitude) }}
+                        </div>
+                        <div class="col-lg-6 col-sm">
+                            {{ form_row(form.longitude) }}
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-    <button class="btn">{{ button_label|default('Save') }}</button>
-    <a href="{{ path('sortie_index') }}" class="btn">Annuler</a>
+    <div class="text-center my-3">
+        <a href="{{ path('sortie_index') }}" class="btn btn-secondary">Retour à l'accueil</a>
+        <button class="btn btn-primary" name="{{ field_name(form.save) }}">{{ button_label|default('Enregistrer') }}</button>
+        {{ form_widget(form.publish) }}
+    </div>
+
 {{ form_end(form) }}

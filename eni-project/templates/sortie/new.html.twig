@@ -3,10 +3,7 @@
 {% block title %}Création d'une sortie{% endblock %}
 
 {% block body %}
-    <h1>Créer une sortie</h1>
+    <h1 class="text-center text-primary">Créer une sortie</h1>
 
     {{ include('sortie/_form.html.twig') }}
-
-    <a href="{{ path('sortie_index') }}" class="btn">Annuler</a>
-
 {% endblock %}

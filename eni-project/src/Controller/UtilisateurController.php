@@ -25,11 +25,12 @@ class UtilisateurController extends AbstractController
     public function Update(Request $request, UserPasswordHasherInterface $userPasswordHasherInterface): Response
     {
         if($this->getUser() != null) {
-            $error ="";
         $user = new Participant();
         $tableRepo = $this->getDoctrine()->getManager()->getRepository(Participant::class);
         $form = $this->createForm(ModificationUtilisateurType::class, $user);
         $form->handleRequest($request);
+        $error = null;
+        $success = null;
 
         if($form->isSubmitted() && $form->isValid()){
             $user = $this->getUser();
@@ -40,24 +41,25 @@ class UtilisateurController extends AbstractController
                     $error = "Le nom du pseudo est déjà existant";
                     return $this->render('utilisateur/modificationUtilisateur.html.twig', [
                         'modificationUtilisateurForm' => $form->createView(),
-                        'error' => $error,
+                        'success' => $success,
+                        'error' => $error
                     ]);
                 }
             }
 
-            if($form->get('pseudo')->getData() != null && $form->get('pseudo')->getData() != $user->getPseudo() ){
+            if($form->get('pseudo')->getData() != $user->getPseudo() ){
                 $user->setPseudo($form->get('pseudo')->getData());
             }
-            if($form->get('prenom')->getData() != null && $form->get('prenom')->getData() != $user->getPrenom() ){
+            if($form->get('prenom')->getData() != $user->getPrenom() ){
                 $user->setPrenom($form->get('prenom')->getData());
             }
-            if($form->get('nom')->getData() != null && $form->get('nom')->getData() != $user->getNom()){
+            if($form->get('nom')->getData() != $user->getNom()){
                 $user->setNom($form->get('nom')->getData());
             }
-            if($form->get('telephone')->getData() != null && $form->get('telephone')->getData() != $user->getTelephone()){
+            if($form->get('telephone')->getData() != $user->getTelephone()){
                 $user->setTelephone($form->get('telephone')->getData());
             }
-            if($form->get('mail')->getData() != null && $form->get('mail')->getData() != $user->getMail()){
+            if($form->get('mail')->getData() != $user->getMail()){
                 $user->setMail($form->get('mail')->getData());
             }
             if($form->get('password')->getData() != null && $userPasswordHasherInterface->hashPassword($user, $form->get('password')->getData()) != $user->getPassword()) {
@@ -72,16 +74,24 @@ class UtilisateurController extends AbstractController
 
                 $nom = "../public/assets/images/".$name['photo'];
                 move_uploaded_file($tmp['photo'], $nom);
-                $user->setPhoto($nom);
+                $nomsave = "assets/images/".$name['photo'];
+                $user->setPhoto($nomsave);
             }
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->flush();
 
-            return $this->redirectToRoute('modification_utilisateur');
+            $success = "L'utilisateur à bien été modifié !";
+
+            return $this->render('utilisateur/modificationUtilisateur.html.twig', [
+                'modificationUtilisateurForm' => $form->createView(),
+                'success' => $success,
+                'error' =>$error
+            ]);
         }
             return $this->render('utilisateur/modificationUtilisateur.html.twig', [
                 'modificationUtilisateurForm' => $form->createView(),
+                'success' => $success,
                 'error' => $error,
             ]);
         }

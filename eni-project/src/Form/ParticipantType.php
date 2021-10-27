@@ -42,35 +42,7 @@ class ParticipantType extends AbstractType
                     'class' => 'col-form-label'
                 ]
             ])
-            ->add('password', RepeatedType::class, [
-                'type' => PasswordType::class,
-                'required' => false,
-                'first_options' => [
-                    'attr' => [
-                        'class' => 'form-control'
-                    ],
-                    'constraints' => [
-                        new Length([
-                            'min' => 6,
-                            'minMessage' => 'Votre mot de passe doit avoir au moins {{ limit }} caractères',
-                            // max length allowed by Symfony for security reasons
-                            'max' => 4096,
-                        ]),
-                    ],
-                    'label' => 'Mot de passe',
-                ],
-                'second_options' => [
-                    'required' => false,
-                    'attr' => [
-                        'autocomplete' => 'new-password',
-                        'class' => 'form-control'
-                    ],
-                    'label' => 'Confirmation du mot de passe',
-                ],
-                'invalid_message' => 'Les champs ne correspondent pas'
-                // Instead of being set onto the object directly,
-                // this is read and encoded in the controller
-            ])
+            ->add('password', PasswordType::class)
             ->add('roles', ChoiceType::class,[
                 'expanded' => true,
                 'multiple' => true,

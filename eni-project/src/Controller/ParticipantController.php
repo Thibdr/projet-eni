@@ -103,33 +103,42 @@ class ParticipantController extends AbstractController
     /**
      * @Route("/{id}/edit", name="participant_edit", methods={"GET","POST"})
      */
-    public function edit(Request $request, Participant $participant, UserPasswordHasherInterface $userPasswordHasherInterface): Response
+    public function edit(ParticipantRepository $participantRepository,Request $request, Participant $participant, UserPasswordHasherInterface $userPasswordHasherInterface): Response
     {
-        $user = $participant;
+        $id = $participant->getId();
+        $user = clone $participantRepository->find($id);
         $form = $this->createForm(ParticipantType::class, $participant);
         $form->handleRequest($request);
-        $doctrine = $this->getDoctrine()->getManager()->getRepository(Participant::class);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            dd($participant);
-            $pseudo_user = $doctrine->findExistPseudo($form->get('pseudo')->getData());
-            if ($pseudo_user != null && $participant->getPseudo() != $pseudo_user[0]['pseudo']) {
-                echo "Lol";
+            $pseudo_user = $participantRepository->findExistPseudo($form->get('pseudo')->getData());
+            if ($pseudo_user != null && $user->getPseudo() != $pseudo_user[0]['pseudo']) {
                 return $this->renderForm('participant/edit.html.twig', [
                     'participant' => $participant,
                     'form' => $form,
                 ]);
             }
-            $participant->setPassword($userPasswordHasherInterface->hashPassword(
+            if($form->get('pseudo')->getData() != $user->getPseudo() ){
+                $user->setPseudo($form->get('pseudo')->getData());
+            }
+            if($form->get('password')->getData() != null && $userPasswordHasherInterface->hashPassword($user, $form->get('password')->getData()) != $user->getPassword()) {
+                $user->setPassword($userPasswordHasherInterface->hashPassword(
+                    $user,
+                    $form->get('password')->getData()
+                ));
+            }
+            else
+                $participant->setPassword($userPasswordHasherInterface->hashPassword(
                 $participant,
-                $form->get('password')->getData()
+                $user->getPassword()
             ));
+
             $this->getDoctrine()->getManager()->flush();
 
             return $this->redirectToRoute('participant_index', [], Response::HTTP_SEE_OTHER);
         }
         return $this->renderForm('participant/edit.html.twig', [
-            'participant' => $user,
+            'participant' => $participant,
             'form' => $form,
         ]);
     }

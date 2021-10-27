@@ -71,7 +71,7 @@
 
             $user = $this->entityManager->getRepository(Participant::class)->findOneBy(['pseudo' => $credentials['pseudo']]);
             if (!$user) {
-                throw new UsernameNotFoundException('Pseudo could not be found.');
+                throw new UsernameNotFoundException('Le pseudo n\'a pas pu être trouvé.');
             }
 
             return $user;

@@ -1,34 +1,37 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-secondary border-bottom border-2 border-secondary px-3">
-    <a class="navbar-brand" href="#">Sortir.com</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid">
+    <img src="{{ asset('assets/logo_wh.png') }}" alt="Logo">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="collapse navbar-collapse" id="navbarText">
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
         {% if app.user %}
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item active mx-4">
                     <a class="nav-link" href="{{ path('sortie_index') }}">Accueil</a>
                 </li>
-                {%  if is_granted('ROLE_USER') %}
-                    <li class="nav-item mx-4">
-                        <a class="nav-link" href="{{ path('ville_index') }}">Villes</a>
-                    </li>
-                    <li class="nav-item mx-4">
-                        <a class="nav-link" href="{{ path('lieu_index') }}">Lieux</a>
-                    </li>
-                {% endif %}
-                {%  if is_granted('ROLE_ADMIN') %}
-                <li class="nav-item mx-4">
-                    <a class="nav-link" href="{{ path('admin') }}">Administration</a>
-                </li>
-                {% endif %}
                 <li class="nav-item mx-4">
                     <a class="nav-link" href=" {{ path('modification_utilisateur') }}">Mon profil</a>
                 </li>
+                {%  if is_granted('ROLE_ADMIN') %}
+                    <li class="nav-item mx-4 dropdown drop-admin">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Administration
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="{{ path('campus_index') }}">Campus</a></li>
+                            <li><a class="dropdown-item" href="{{ path('participant_import') }}">Importer des utilisateurs</a></li>
+                            <li><a class="dropdown-item" href="{{ path('lieu_index') }}">Lieux</a></li>
+                            <li><a class="dropdown-item" href="{{ path('participant_index') }}">Utilisateurs</a></li>
+                            <li><a class="dropdown-item" href="{{ path('ville_index') }}">Villes</a></li>
+                        </ul>
+                    </li>
+                {% endif %}
                 <li class="nav-item ms-4">
                     <a class="nav-link" href="{{ path('app_logout') }}">Se déconnecter</a>
                 </li>
             </ul>
         {% endif %}
     </div>
+  </div>
 </nav>

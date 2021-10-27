@@ -28,7 +28,7 @@ class SortieRepository extends ServiceEntityRepository
 
         $qb->select('s')->from('App\Entity\Sortie', 's');
 
-        $site ? $qb->andWhere('s.lieu = :site')->setParameter('site',$site) : null;
+        $site ? $qb->andWhere('s.campus = :site')->setParameter('site',$site) : null;
         $organisateur ? $qb->andWhere('s.organisateur = :user')->setParameter('user', $user) : null;
         $inscrit ? $qb->andWhere(':user MEMBER OF s.participant')->setParameter('user', $user) : null;
         $non_inscrit ? $qb->andWhere(':user NOT MEMBER OF s.participant')->setParameter('user',$user) : null;
@@ -44,8 +44,8 @@ class SortieRepository extends ServiceEntityRepository
         if($start && $end){
             $qb->andWhere('s.dateHeureDebut >  :start')
             ->andWhere('s.dateHeureDebut <  :end')
-            ->setParameter('start', date('Y-m-d', strtotime(str_replace('/', '-', $start))))
-            ->setParameter('end', date('Y-m-d', strtotime(str_replace('/', '-', $end))));
+            ->setParameter('start', $start)
+            ->setParameter('end', $end);
         }
 
         $query = $qb->getQuery();

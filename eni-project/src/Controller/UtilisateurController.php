@@ -26,7 +26,6 @@ class UtilisateurController extends AbstractController
     {
         if($this->getUser() != null) {
         $user = new Participant();
-        $tableRepo = $this->getDoctrine()->getManager()->getRepository(Participant::class);
         $form = $this->createForm(ModificationUtilisateurType::class, $user);
         $form->handleRequest($request);
         $error = null;
@@ -34,18 +33,6 @@ class UtilisateurController extends AbstractController
 
         if($form->isSubmitted() && $form->isValid()){
             $user = $this->getUser();
-            $table = $tableRepo->findAll();
-
-            for($i = 0; $i<count($table); $i++){
-                if($user->getPseudo() != $form->get('pseudo')->getData() && $table[$i]->getPseudo() == $form->get('pseudo')->getData()) {
-                    $error = "Le nom du pseudo est déjà existant";
-                    return $this->render('utilisateur/modificationUtilisateur.html.twig', [
-                        'modificationUtilisateurForm' => $form->createView(),
-                        'success' => $success,
-                        'error' => $error
-                    ]);
-                }
-            }
 
             if($form->get('pseudo')->getData() != $user->getPseudo() ){
                 $user->setPseudo($form->get('pseudo')->getData());

@@ -121,17 +121,16 @@ class ParticipantController extends AbstractController
             if($form->get('pseudo')->getData() != $user->getPseudo() ){
                 $user->setPseudo($form->get('pseudo')->getData());
             }
-            if($form->get('password')->getData() != null && $userPasswordHasherInterface->hashPassword($user, $form->get('password')->getData()) != $user->getPassword()) {
-                $user->setPassword($userPasswordHasherInterface->hashPassword(
-                    $user,
+            dd($user->getPassword());
+            if($form->get('password')->getData() != null && $userPasswordHasherInterface->hashPassword($user, $form->get('password')->getData()) != $userPasswordHasherInterface->hashPassword($user, $user->getPassword())) {
+                $participant->setPassword($userPasswordHasherInterface->hashPassword(
+                    $participant,
                     $form->get('password')->getData()
                 ));
             }
-            else
-                $participant->setPassword($userPasswordHasherInterface->hashPassword(
-                $participant,
-                $user->getPassword()
-            ));
+            else {
+                $participant->setPassword($user->getPassword());
+            }
 
             $this->getDoctrine()->getManager()->flush();
 

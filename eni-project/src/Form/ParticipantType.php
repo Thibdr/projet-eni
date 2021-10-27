@@ -10,6 +10,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TelType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -27,6 +28,10 @@ class ParticipantType extends AbstractType
             ->add('pseudo', TextType::class, [
                 'constraints' => [
                     new NotBlank(['message' => 'Veuillez renseigner un pseudo']),
+                    new Regex([
+                        'pattern' => '/^[A-Za-z0-9_]+$/',
+                        'message' => 'Le pseudo doit être au bon format'
+                    ]),
                     new Length([
                         'min' => 4,
                         'max' => 20,
@@ -37,9 +42,34 @@ class ParticipantType extends AbstractType
                     'class' => 'col-form-label'
                 ]
             ])
-            //->add('roles')
-            ->add('password', PasswordType::class, [
+            ->add('password', RepeatedType::class, [
+                'type' => PasswordType::class,
                 'required' => false,
+                'first_options' => [
+                    'attr' => [
+                        'class' => 'form-control'
+                    ],
+                    'constraints' => [
+                        new Length([
+                            'min' => 6,
+                            'minMessage' => 'Votre mot de passe doit avoir au moins {{ limit }} caractères',
+                            // max length allowed by Symfony for security reasons
+                            'max' => 4096,
+                        ]),
+                    ],
+                    'label' => 'Mot de passe',
+                ],
+                'second_options' => [
+                    'required' => false,
+                    'attr' => [
+                        'autocomplete' => 'new-password',
+                        'class' => 'form-control'
+                    ],
+                    'label' => 'Confirmation du mot de passe',
+                ],
+                'invalid_message' => 'Les champs ne correspondent pas'
+                // Instead of being set onto the object directly,
+                // this is read and encoded in the controller
             ])
             ->add('roles', ChoiceType::class,[
                 'expanded' => true,

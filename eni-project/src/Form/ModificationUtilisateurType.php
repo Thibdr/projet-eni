@@ -138,7 +138,7 @@ class ModificationUtilisateurType extends AbstractType
         'constraints' => [
             new NotBlank(['message' => 'Veuillez renseigner un pseudo']),
             new Regex([
-                'pattern' => '/^[a-zA-Z]+$/',
+                'pattern' => '/^[a-zA-Zéèà]+$/',
                 'message' => 'Le nom doit être au bon format'
             ]),
             new Length([
@@ -155,7 +155,7 @@ class ModificationUtilisateurType extends AbstractType
         'constraints' => [
             new NotBlank(['message' => 'Veuillez renseigner un pseudo']),
             new Regex([
-                    'pattern' => '/^[a-zA-Z]+$/',
+                    'pattern' => '/^[a-zA-Zéèà]+$/',
                     'message' => 'Le prénom doit être au bon format'
             ]),
             new Length([

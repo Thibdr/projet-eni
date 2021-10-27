@@ -43,7 +43,10 @@ class ParticipantType extends AbstractType
                 ],
                 'label' => 'Pseudo :'
             ])
-            ->add('password', PasswordType::class)
+            ->add('password', PasswordType::class,[
+                'required' => false,
+                'empty_data' => ''
+            ])
             ->add('roles', ChoiceType::class,[
                 'expanded' => true,
                 'multiple' => true,
@@ -54,7 +57,7 @@ class ParticipantType extends AbstractType
                 'constraints' => [
                     new NotBlank(['message' => 'Veuillez renseigner un pseudo']),
                     new Regex([
-                        'pattern' => '/^[a-zA-Z]+$/',
+                        'pattern' => '/^[a-zA-Zéèà]+$/',
                         'message' => 'Le nom doit être au bon format'
                     ]),
                     new Length([
@@ -72,7 +75,7 @@ class ParticipantType extends AbstractType
                 'constraints' => [
                     new NotBlank(['message' => 'Veuillez renseigner un pseudo']),
                     new Regex([
-                        'pattern' => '/^[a-zA-Z]+$/',
+                        'pattern' => '/^[a-zA-Zéèà]+$/',
                         'message' => 'Le prénom doit être au bon format'
                     ]),
                     new Length([

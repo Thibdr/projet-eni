@@ -17,3 +17,32 @@
     margin-bottom: 5%;
     text-align: center;
 }
+
+.login-form{
+    margin-top: 15%;
+}
+
+.login-logo {
+    margin-top:0.5%;
+    margin-left:1%;
+    text-align: left;
+}
+
+
+.user-info{
+    font-weight: bold;
+    text-align: right;
+    margin-right:1%;
+}
+
+@media (max-width: 500px) {
+    .desktop-view,.user-info,.drop-admin{
+        display: none;
+    }
+}
+
+@media (min-width: 500px) {
+    .mobile-view{
+        display: none;
+    }
+}

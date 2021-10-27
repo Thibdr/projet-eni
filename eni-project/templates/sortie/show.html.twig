@@ -59,14 +59,16 @@
                         <thead>
                             <th>Pseudo</th>
                             <th>Nom</th>
-                            <th>Actions</th>
                         </thead>
                         <tbody>
                             {% for participant in sortie.participant %}
                                 <tr>
-                                    <td>{{ participant.pseudo }}</td>
+                                    <td>
+                                        <a href="{{ path('affiche_utilisateur', {'id':participant.id }) }}">
+                                            {{ participant.pseudo }}
+                                        </a>
+                                    </td>
                                     <td>{{ participant.prenom | capitalize }} {{ participant.nom | upper }}</td>
-                                    <td><a href="{{ path('affiche_utilisateur', {'id':participant.id }) }}" class="btn btn-primary">Voir le profil</a></td>
                                 </tr>
                             {% endfor %}
                         </tbody>

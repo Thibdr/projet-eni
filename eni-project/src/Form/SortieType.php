@@ -7,14 +7,15 @@ use App\Entity\Sortie;
 use App\Entity\Ville;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
@@ -23,6 +24,7 @@ use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Positive;
 use Symfony\Component\Validator\Constraints\Type;
+use Symfony\Component\Validator\Context\ExecutionContext;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 class SortieType extends AbstractType
@@ -211,6 +213,48 @@ class SortieType extends AbstractType
                 }
             }
         );
+
+        $builder->addEventListener(
+            FormEvents::POST_SUBMIT,
+            function (FormEvent $event) {
+                $data = $event->getData();
+                $form = $event->getForm();
+                $data->nomLieu = $form->get('nomLieu')->getData();
+                $data->rue = $form->get('rue')->getData();
+                $data->latitude = $form->get('latitude')->getData();
+                $data->longitude = $form->get('longitude')->getData();
+                $this->validate($form, $data);
+            }
+        );
+    }
+
+    /**
+     * Validate place
+     *
+     */
+    public function validate(Form $form, object $data): void
+    {
+        if($data->getLieu() == null && $data->nomLieu == null) {
+            $error = new FormError('Vous devez définir un lieu pour la sortie');
+
+            $form->get('lieu')->addError($error);
+            $form->get('nomLieu')->addError($error);
+        }
+        if($data->nomLieu != null) {
+            if($data->rue == null) {
+                $form->get('rue')->addError(new FormError('Veuillez renseigner un nom de rue'));
+            }
+            if($data->latitude == null) {
+                $form->get('latitude')->addError(new FormError('Veuillez renseigner une latitude'));
+            } else if(!is_numeric($data->latitude)) {
+                $form->get('latitude')->addError(new FormError('La longitude doit être un nombre décimal'));
+            }
+            if($data->longitude == null) {
+                $form->get('longitude')->addError(new FormError('Veuillez renseigner une longitude'));
+            } else if(!is_numeric($data->longitude)) {
+                $form->get('longitude')->addError(new FormError('La longitude doit être un nombre décimal'));
+            }
+        }
     }
 
     private function addPlaceField(FormInterface $form, ?Ville $ville) {

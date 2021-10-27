@@ -57,6 +57,8 @@
     <button type="reset" class="btn btn-secondary">Annuler</button>
 
     {{ form_end(modificationUtilisateurForm) }}
+    {% if app.user.photo %}
     <img src="{{ asset(app.user.photo) }}" alt="">
+    {% endif %}
     </div>
 {% endblock %}

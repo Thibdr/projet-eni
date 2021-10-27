@@ -10,6 +10,8 @@
     <p> Téléphone : {{ participant.telephone }}</p>
     <p> Email : {{ participant.mail }}</p>
     <p> Ville de rattachement : {{ participant.campus.nom }}</p>
+    {% if participant.photo %}
     <img src="{{ asset(participant.photo) }}" alt="">
+    {% endif %}
     <div>
 {% endblock %}

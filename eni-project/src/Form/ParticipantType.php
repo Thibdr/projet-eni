@@ -40,7 +40,8 @@ class ParticipantType extends AbstractType
                     ])
                 ], 'label_attr' => [
                     'class' => 'col-form-label'
-                ]
+                ],
+                'label' => 'Pseudo :'
             ])
             ->add('password', RepeatedType::class, [
                 'type' => PasswordType::class,
@@ -75,7 +76,7 @@ class ParticipantType extends AbstractType
                 'expanded' => true,
                 'multiple' => true,
                 'choices' => $this->getRole(),
-                'label' => 'Role',
+                'label' => 'Role :',
             ])
             ->add('nom', TextType::class, [
                 'constraints' => [
@@ -92,7 +93,8 @@ class ParticipantType extends AbstractType
                     ])
                 ], 'label_attr' => [
                     'class' => 'col-form-label'
-                ]
+                ],
+                'label' => 'Nom :'
             ])
             ->add('prenom', TextType::class, [
                 'constraints' => [
@@ -109,7 +111,8 @@ class ParticipantType extends AbstractType
                     ])
                 ], 'label_attr' => [
                     'class' => 'col-form-label'
-                ]
+                ],
+                'label' => 'Prénom :'
             ])
             ->add('telephone', TelType::class, [
                 'constraints' => [
@@ -119,6 +122,7 @@ class ParticipantType extends AbstractType
                         'message' => 'Le numéro de téléphone doit être au bon format'
                     ])
                 ],
+                'label' => 'Téléphone :'
             ])
             ->add('mail', EmailType::class, [
                 'constraints' => [
@@ -128,6 +132,7 @@ class ParticipantType extends AbstractType
                         'message' => 'L\'adresse mail doit être au bon format (xx@example.com'
                     ])
                 ],
+                'label' => 'Mail :'
             ])
             ->add('campus', EntityType::class, [
                 'attr' => [
@@ -141,7 +146,8 @@ class ParticipantType extends AbstractType
                 'label' => 'Campus',
                 'label_attr' => [
                     'class' => 'col-form-label'
-                ]
+                ],
+                'label' => 'Campus :'
             ])
             ->add('actif')
         ;

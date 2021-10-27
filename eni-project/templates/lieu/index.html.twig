@@ -3,11 +3,8 @@
 {% block title %}Gestion des lieux{% endblock %}
 
 {% block body %}
-    <h1 class="text-center text-primary mb-5">Gestion des lieux</h1>
-
+    <h3 class="my-3">Gestion des lieux</h3>
     <div class="mx-lg-2">
-        <a href="{{ path('lieu_new') }}" class="btn btn-primary">Nouveau lieu</a>
-
         <table class="table text-center mt-3">
             <thead>
             <tr>
@@ -48,5 +45,9 @@
             {% endfor %}
             </tbody>
         </table>
+
+        <div class="text-center">
+            <a href="{{ path('lieu_new') }}" class="btn btn-primary">Nouveau lieu</a>
+        </div>
     </div>
 {% endblock %}

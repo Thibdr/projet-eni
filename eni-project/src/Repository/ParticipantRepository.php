@@ -36,6 +36,16 @@ class ParticipantRepository extends ServiceEntityRepository implements PasswordU
         $this->_em->flush();
     }
 
+    public function findExistPseudo($formpseudo){
+        $queryBuilder = $this->createQueryBuilder('s')
+            ->select('s.pseudo')
+            ->andWhere('s.pseudo = :formpseudo')
+            ->setParameter('formpseudo', $formpseudo);
+        $query = $queryBuilder->getQuery();
+        $result = $query->getResult();
+        return $result;
+    }
+
     // /**
     //  * @return Participant[] Returns an array of Participant objects
     //  */

@@ -1,6 +1,6 @@
 {{ form_start(form) }}
     <div class="row">
-        <div class="col-3">
+        <div class="col-3 offset-1">
             {{ form_row(form.site) }}
             {{ form_row(form.nom) }}
             <div class="row">
@@ -26,7 +26,7 @@
                 {{ form_row(form.passees) }}
             </div>
         </div>
-        <div class="col-4" style='margin-top:4%;'>
+        <div class="col-3" style='margin-top:4%;'>
             <button class="btn btn-lg btn-primary btn-filters">{{ button_label|default('Rechercher') }}</button>
         </div>
     </div>

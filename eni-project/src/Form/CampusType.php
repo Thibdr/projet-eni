@@ -16,7 +16,7 @@ class CampusType extends AbstractType
             ->add('nom', TextType::class, [
                 'attr' => [
                     'class' => ' form-control'
-                ]
+                ],
             ])
         ;
     }

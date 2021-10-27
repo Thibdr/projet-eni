@@ -1,13 +1,18 @@
 {% extends 'base-admin.html.twig' %}
 
-{% block title %}Edit Participant{% endblock %}
+{% block title %}Modifier un participant{% endblock %}
 
 {% block content %}
-    <h1>Edit Participant</h1>
+    <h3 class="my-3">Modifier un participant</h3>
 
-    {{ include('participant/_form.html.twig', {'button_label': 'Update'}) }}
+    <div class="row">
+        {{ include('participant/_form.html.twig', {'button_label': 'Modifier'}) }}
+        <form method="post" action="{{ path('participant_delete', {'id': participant.id}) }}" onsubmit="return confirm('Etes vous sûr de vouloir supprimer cet utilisateur ?');">   
+            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ participant.id) }}">
 
-    <a href="{{ path('participant_index') }}">back to list</a>
-
-    {{ include('participant/_delete_form.html.twig') }}
+            <a class="offset-4 col-2 btn btn-secondary" href="{{ path('participant_index') }}">Retour à la liste</a>
+            <button class="col-2 btn btn-danger">Supprimer</button>
+            
+        </form>
+    </div>
 {% endblock %}

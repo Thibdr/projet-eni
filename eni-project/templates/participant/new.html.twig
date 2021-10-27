@@ -3,9 +3,7 @@
 {% block title %}Administration - Nouveau participant{% endblock %}
 
 {% block content %}
-    <h3 class="text-uppercase text-secondary">Création d'un nouveau participant</h3>
+    <h3 class="my-3">Création d'un nouveau participant</h3>
 
-    {{ include('participant/_form.html.twig') }}
-
-    <a href="{{ path('participant_index') }}">back to list</a>
+    {{ include('participant/_form.html.twig' ,{'button_label': 'Enregistrer'}) }}
 {% endblock %}

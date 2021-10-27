@@ -103,19 +103,33 @@ class ParticipantController extends AbstractController
     /**
      * @Route("/{id}/edit", name="participant_edit", methods={"GET","POST"})
      */
-    public function edit(Request $request, Participant $participant): Response
+    public function edit(Request $request, Participant $participant, UserPasswordHasherInterface $userPasswordHasherInterface): Response
     {
+        $user = $participant;
         $form = $this->createForm(ParticipantType::class, $participant);
         $form->handleRequest($request);
+        $doctrine = $this->getDoctrine()->getManager()->getRepository(Participant::class);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            dd($participant);
+            $pseudo_user = $doctrine->findExistPseudo($form->get('pseudo')->getData());
+            if ($pseudo_user != null && $participant->getPseudo() != $pseudo_user[0]['pseudo']) {
+                echo "Lol";
+                return $this->renderForm('participant/edit.html.twig', [
+                    'participant' => $participant,
+                    'form' => $form,
+                ]);
+            }
+            $participant->setPassword($userPasswordHasherInterface->hashPassword(
+                $participant,
+                $form->get('password')->getData()
+            ));
             $this->getDoctrine()->getManager()->flush();
 
             return $this->redirectToRoute('participant_index', [], Response::HTTP_SEE_OTHER);
         }
-
         return $this->renderForm('participant/edit.html.twig', [
-            'participant' => $participant,
+            'participant' => $user,
             'form' => $form,
         ]);
     }

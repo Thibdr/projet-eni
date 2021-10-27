@@ -20,7 +20,7 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 class UtilisateurController extends AbstractController
 {
     /**
-     * @Route("/modificationUtilisateur", name="modification_utilisateur")
+     * @Route("/modificationutilisateur", name="modification_utilisateur")
      */
     public function Update(Request $request, UserPasswordHasherInterface $userPasswordHasherInterface): Response
     {

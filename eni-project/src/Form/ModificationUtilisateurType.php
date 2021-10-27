@@ -90,7 +90,7 @@ class ModificationUtilisateurType extends AbstractType
                     $this, 'validate'
                 ]),
                 new Regex([
-                    'pattern' => '/^[A-Za-z{4,}0-9_]+$/',
+                    'pattern' => '/^[A-Za-z0-9_]+$/',
                     'message' => 'Le pseudo doit être au bon format'
                 ]),
                 new Length([

@@ -126,23 +126,8 @@ class SortieType extends AbstractType
                     $ville = $lieu->getVille();
                     $form->get('ville')->setData($ville);
 
-                    /*$form->add('lieu', EntityType::class, [
-                        'class' => Lieu::class,
-                        'choices' => $lieu->getVille()->getLieux(),
-                        'choice_label' => 'Nom',
-                        'placeholder' => 'Selectionner un lieu',
-                        'required' => false,
-                    ]);*/
-
                     $this->addPlaceField($form, $ville);
                 } else {
-                    /*$form->add('lieu', EntityType::class, [
-                        'class' => Lieu::class,
-                        'choices' => [],
-                        'choice_label' => 'Nom',
-                        'placeholder' => 'Selectionner un lieu',
-                        'required' => false,
-                    ]);*/
                     $this->addPlaceField($form, null);
                 }
             }
@@ -153,13 +138,6 @@ class SortieType extends AbstractType
             function(FormEvent $event) {
                 $form = $event->getForm();
 
-                /*$form->getParent()->add('lieu', EntityType::class, [
-                    'class' => Lieu::class,
-                    'choices' => $form->getData()->getLieux(),
-                    'choice_label' => 'Nom',
-                    'placeholder' => 'Selectionner un lieu',
-                    'required' => false,
-                ]);*/
                 $this->addPlaceField($form->getParent(), $form->getData());
             }
         );
@@ -182,6 +160,11 @@ class SortieType extends AbstractType
     {
         if($data->getLieu() == null && $data->nomLieu == null) {
             $error = new FormError('Vous devez définir un lieu pour la sortie');
+
+            $form->get('lieu')->addError($error);
+            $form->get('nomLieu')->addError($error);
+        } else if($data->getLieu() != null && $data->nomLieu != null) {
+            $error = new FormError('Vous devez définir plusieurs fois le lieu pour la sortie');
 
             $form->get('lieu')->addError($error);
             $form->get('nomLieu')->addError($error);

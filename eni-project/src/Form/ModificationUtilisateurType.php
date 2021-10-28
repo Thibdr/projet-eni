@@ -119,7 +119,7 @@ class ModificationUtilisateurType extends AbstractType
                             'max' => 4096,
                         ]),
                     ],
-                    'label' => 'Mot de passe',
+                    'label' => 'Nouveau mot de passe',
                 ],
                 'second_options' => [
                     'required' => false,
@@ -127,7 +127,7 @@ class ModificationUtilisateurType extends AbstractType
                         'autocomplete' => 'new-password',
                         'class' => 'form-control'
                     ],
-                    'label' => 'Confirmation du mot de passe',
+                    'label' => 'Confirmation du nouveau mot de passe',
                 ],
                 'invalid_message' => 'Les champs ne correspondent pas'
                 // Instead of being set onto the object directly,

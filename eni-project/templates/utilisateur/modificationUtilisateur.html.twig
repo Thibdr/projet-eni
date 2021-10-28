@@ -18,11 +18,18 @@
                 <div class="row">
                     {% if app.user.photo %}
                         <img class="desktop-profil-picture my-3 col-sm-4" style="border-radius: 10%;" src="{{ asset(app.user.photo) }}" >
+                        <div class="col-12 col-sm-8 mt-sm-4">
+                            {{ form_row(modificationUtilisateurForm.prenom, { value : app.user.prenom }) }}
+                            {{ form_row(modificationUtilisateurForm.nom, { value : app.user.nom }) }}
+                        </div>
+                    {% else %}
+                        <div class="col-12 col-sm-6">
+                            {{ form_row(modificationUtilisateurForm.prenom, { value : app.user.prenom }) }} 
+                        </div>
+                        <div class="col-12 col-sm-6">
+                            {{ form_row(modificationUtilisateurForm.nom, { value : app.user.nom }) }}
+                        </div>                    
                     {% endif %}
-                    <div class="col-12 col-sm-8 mt-sm-4">
-                        {{ form_row(modificationUtilisateurForm.prenom, { value : app.user.prenom }) }}
-                        {{ form_row(modificationUtilisateurForm.nom, { value : app.user.nom }) }}
-                    </div>
                 </div>
                 <div class="row">
                     <div class="col-12 col-sm-4">

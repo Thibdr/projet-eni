@@ -31,9 +31,6 @@ class SortieType extends AbstractType
     {
         $builder
             ->add('nom', TextType::class, [
-                'attr' => [
-                    'class' => 'form-control'
-                ],
                 'constraints' => [
                     new NotBlank(['message' => 'Veuillez renseigner un nom']),
                     new Length([
@@ -43,136 +40,66 @@ class SortieType extends AbstractType
                         'maxMessage' => "Nom trop long ! Au plus 255 caractères"
                     ])
                 ],
-                'label_attr' => [
-                    'class' => 'col-form-label'
-                ]
             ])
             ->add('dateHeureDebut', DateTimeType::class, [
-                'attr' => [
-                    'class' => 'form-control'
-                ],
                 'by_reference' => true,
                 'constraints' => [
                     new NotBlank(['message' => 'Veuillez renseigner une date de début']),
                     new Type(['type' => '\DateTimeInterface'])
                 ],
                 'label' => 'Date et heure de la sortie',
-                'label_attr' => [
-                    'class' => 'col-form-label'
-                ],
                 'widget' => 'single_text'
             ])
             ->add('dateLimiteInscription', DateType::class, [
-                'attr' => [
-                    'class' => 'form-control'
-                ],
                 'by_reference' => true,
                 'constraints' => [
                     new NotBlank(['message' => "Veuillez renseigner une date limite d'inscription"]),
                     new Type(['type' => '\DateTimeInterface'])
                 ],
                 'label' => "Date limite d'inscription",
-                'label_attr' => [
-                    'class' => 'col-form-label'
-                ],
                 'widget' => 'single_text'
             ])
             ->add('nbInscriptionsMax', IntegerType::class, [
-                'attr' => [
-                    'class' => 'form-control'
-                ],
                 'constraints' => [
                     new NotBlank(['message' => "Veuillez renseigner un nombre de places maximum"]),
                     new Positive()
                 ],
                 'label' => 'Nombre de places',
-                'label_attr' => [
-                    'class' => 'col-form-label'
-                ]
             ])
             ->add('duree', IntegerType::class, [
-                'attr' => [
-                    'class' => 'form-control'
-                ],
                 'constraints' => [
                     new NotBlank(['message' => 'Veuillez renseigner une durée']),
                     new Positive()
                 ],
                 'label' => 'Durée',
-                'label_attr' => [
-                    'class' => 'col-form-label'
-                ],
             ])
             ->add('informations', TextareaType::class, [
-                'attr' => [
-                    'class' => 'form-control'
-                ],
                 'label' => 'Description et infos',
-                'label_attr' => [
-                    'class' => 'col-form-label'
-                ],
                 'required' => false
             ])
-            /*
-            ->add('lieu', EntityType::class, [
-                'attr' => [
-                    'class' => 'form-control'
-                ],
-                'choice_label' => 'nom',
-                'class' => Lieu::class,
-                'constraints' => [
-                    new Type(['type' => 'App\Entity\Lieu']),
-                ],
-                'label' => 'Lieu',
-                'label_attr' => [
-                    'class' => 'col-form-label'
-                ]
-            ])
-            */
             ->add('ville', EntityType::class, [
                 'class' => Ville::class,
+                'constraints' => [
+                    new NotBlank(['message' => "Veuillez choisir une ville"]),
+                ],
                 'mapped' => false,
                 'placeholder' => 'Selectionner une ville',
-                'required' => false
+                'required' => false,
             ])
             ->add('nomLieu', TextType::class, [
-                'attr' => [
-                    'class' => 'form-control'
-                ],
                 'label' => 'Nom',
-                'label_attr' => [
-                    'class' => 'col-form-label'
-                ],
                 'mapped' => false,
                 'required' => false
             ])
             ->add('rue', TextType::class, [
-                'attr' => [
-                    'class' => 'form-control'
-                ],
-                'label_attr' => [
-                    'class' => 'col-form-label'
-                ],
                 'mapped' => false,
                 'required' => false
             ])
             ->add('latitude', TextType::class, [
-                'attr' => [
-                    'class' => 'form-control'
-                ],
-                'label_attr' => [
-                    'class' => 'col-form-label'
-                ],
                 'mapped' => false,
                 'required' => false
             ])
             ->add('longitude', TextType::class, [
-                'attr' => [
-                    'class' => 'form-control'
-                ],
-                'label_attr' => [
-                    'class' => 'col-form-label'
-                ],
                 'mapped' => false,
                 'required' => false
             ])
@@ -188,14 +115,6 @@ class SortieType extends AbstractType
                 'label' => 'Publier'
             ]);
 
-
-        $builder->get('ville')->addEventListener(
-            FormEvents::POST_SUBMIT,
-            function(FormEvent $event) {
-                $form = $event->getForm();
-                $this->addPlaceField($form->getParent(), $form->getData());
-            }
-        );
         $builder->addEventListener(
             FormEvents::POST_SET_DATA,
             function(FormEvent $event) {
@@ -205,11 +124,43 @@ class SortieType extends AbstractType
                 $lieu = $data->getLieu();
                 if($lieu) {
                     $ville = $lieu->getVille();
-                    $this->addPlaceField($form, $ville);
                     $form->get('ville')->setData($ville);
+
+                    /*$form->add('lieu', EntityType::class, [
+                        'class' => Lieu::class,
+                        'choices' => $lieu->getVille()->getLieux(),
+                        'choice_label' => 'Nom',
+                        'placeholder' => 'Selectionner un lieu',
+                        'required' => false,
+                    ]);*/
+
+                    $this->addPlaceField($form, $ville);
                 } else {
+                    /*$form->add('lieu', EntityType::class, [
+                        'class' => Lieu::class,
+                        'choices' => [],
+                        'choice_label' => 'Nom',
+                        'placeholder' => 'Selectionner un lieu',
+                        'required' => false,
+                    ]);*/
                     $this->addPlaceField($form, null);
                 }
+            }
+        );
+
+        $builder->get('ville')->addEventListener(
+            FormEvents::POST_SUBMIT,
+            function(FormEvent $event) {
+                $form = $event->getForm();
+
+                /*$form->getParent()->add('lieu', EntityType::class, [
+                    'class' => Lieu::class,
+                    'choices' => $form->getData()->getLieux(),
+                    'choice_label' => 'Nom',
+                    'placeholder' => 'Selectionner un lieu',
+                    'required' => false,
+                ]);*/
+                $this->addPlaceField($form->getParent(), $form->getData());
             }
         );
 
@@ -227,10 +178,6 @@ class SortieType extends AbstractType
         );
     }
 
-    /**
-     * Validate place
-     *
-     */
     public function validate(Form $form, object $data): void
     {
         if($data->getLieu() == null && $data->nomLieu == null) {
@@ -260,15 +207,13 @@ class SortieType extends AbstractType
         $form->add('lieu', EntityType::class, [
             'class' => Lieu::class,
             'choices' => $ville ? $ville->getLieux() : [],
-            'placeholder' => $ville ? 'Selectionner un lieu' : 'Selectionner une ville',
-            'required' => false
+            'placeholder' => 'Selectionner un lieu',
+            'required' => false,
         ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults([
-            'data_class' => Sortie::class,
-        ]);
+        $resolver->setDefaults([]);
     }
 }

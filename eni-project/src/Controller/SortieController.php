@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Entity\Lieu;
 use App\Entity\Participant;
 use App\Entity\Sortie;
-
 use App\Form\AnnulationSortieType;
 use App\Form\FiltreSortieType;
 use App\Form\SortieType;
@@ -13,13 +12,17 @@ use App\Repository\SortieRepository;
 use Doctrine\ORM\PersistentCollection;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 use App\Repository\LieuRepository;
 use Symfony\Component\Routing\Exception\NoConfigurationException;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * @IsGranted("ROLE_USER")
@@ -77,10 +80,7 @@ class SortieController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
 
             $nouveauLieu = $form->get('nomLieu')->getData();
-            $lieuExistant = $form->get('lieu')->getData();
-            if($nouveauLieu == null && $lieuExistant == null) {
 
-            }
             if($nouveauLieu != null) {
                 $lieu = new Lieu();
                 $lieu->setNom($nouveauLieu);
@@ -92,8 +92,7 @@ class SortieController extends AbstractController
                 $entityManager->persist($lieu);
             }
 
-
-            $etat = ($form->getClickedButton()->getName() === 'save') ? 'En cours' : 'Ouverte';
+            $etat = ($form->getClickedButton()->getName() === 'save') ? 'En création' : 'Ouverte';
             $sortie->setEtat($etat);
             $user = $this->getUser();
             $sortie->setOrganisateur($user);
@@ -106,9 +105,9 @@ class SortieController extends AbstractController
             return $this->redirectToRoute('sortie_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('sortie/new.html.twig', [
+        return $this->render('sortie/new.html.twig', [
             'sortie' => $sortie,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
 
@@ -130,18 +129,34 @@ class SortieController extends AbstractController
         $form = $this->createForm(SortieType::class, $sortie);
         $form->handleRequest($request);
 
+
         if ($form->isSubmitted() && $form->isValid()) {
-            $etat = ($form->getClickedButton()->getName() === 'save') ? 'En cours' : 'Ouverte';
+            $entityManager = $this->getDoctrine()->getManager();
+
+            $nouveauLieu = $form->get('nomLieu')->getData();
+
+            if($nouveauLieu != null) {
+                $lieu = new Lieu();
+                $lieu->setNom($nouveauLieu);
+                $lieu->setVille($form->get('ville')->getData());
+                $lieu->setRue($form->get('rue')->getData());
+                $lieu->setLatitude($form->get('latitude')->getData());
+                $lieu->setLongitude($form->get('longitude')->getData());
+                $sortie->setLieu($lieu);
+                $entityManager->persist($lieu);
+            }
+
+            $etat = ($form->getClickedButton()->getName() === 'save') ? 'En création' : 'Ouverte';
             $sortie->setEtat($etat);
 
-            $this->getDoctrine()->getManager()->flush();
+            $entityManager->flush();
 
             return $this->redirectToRoute('sortie_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('sortie/edit.html.twig', [
+        return $this->render('sortie/edit.html.twig', [
             'sortie' => $sortie,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
 
@@ -184,7 +199,7 @@ class SortieController extends AbstractController
     /**
      * @Route("/{id}/subscribe", name="sortie_subscribe", methods={"GET"})
      */
-    public function subscribe(Request $request, Sortie $sortie): Response {
+    public function subscribe(Sortie $sortie): Response {
         if($sortie->getOrganisateur()->getId() == $this->getUser()->getId()) {
             throw $this->createAccessDeniedException("Vous ne pouvez pas vous inscrire à votre sortie", new NoConfigurationException());
         }
@@ -213,7 +228,7 @@ class SortieController extends AbstractController
     /**
      * @Route("/{id}/unsubscribe", name="sortie_unsubscribe", methods={"GET"})
      */
-    public function unsubscribe(Request $request, Sortie $sortie): Response {
+    public function unsubscribe(Sortie $sortie): Response {
 
         $participants = $sortie->getParticipant();
         if(!$this->isSubscriber($participants, $this->getUser())) {

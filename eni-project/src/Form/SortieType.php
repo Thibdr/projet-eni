@@ -24,8 +24,6 @@ use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Positive;
 use Symfony\Component\Validator\Constraints\Type;
-use Symfony\Component\Validator\Context\ExecutionContext;
-use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 class SortieType extends AbstractType
 {
@@ -53,6 +51,7 @@ class SortieType extends AbstractType
                 'attr' => [
                     'class' => 'form-control'
                 ],
+                'by_reference' => true,
                 'constraints' => [
                     new NotBlank(['message' => 'Veuillez renseigner une date de début']),
                     new Type(['type' => '\DateTimeInterface'])
@@ -67,6 +66,7 @@ class SortieType extends AbstractType
                 'attr' => [
                     'class' => 'form-control'
                 ],
+                'by_reference' => true,
                 'constraints' => [
                     new NotBlank(['message' => "Veuillez renseigner une date limite d'inscription"]),
                     new Type(['type' => '\DateTimeInterface'])
@@ -193,7 +193,6 @@ class SortieType extends AbstractType
             FormEvents::POST_SUBMIT,
             function(FormEvent $event) {
                 $form = $event->getForm();
-
                 $this->addPlaceField($form->getParent(), $form->getData());
             }
         );

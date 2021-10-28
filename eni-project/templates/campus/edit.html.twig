@@ -12,7 +12,7 @@
                 {{ form_widget(form.nom) }}
                 <div class="my-3 text-center">
                     <a href="{{ path('campus_index') }}" class="btn btn-secondary">Retour à la liste</a>
-                    <button class="btn btn-primary">{{ button_label|default('Mettre à jour') }}</button>
+                    <button class="btn btn-warning">{{ button_label|default('Mettre à jour') }}</button>
                 </div>
             {{ form_end(form) }}
         </div>

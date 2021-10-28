@@ -16,14 +16,13 @@ class SecurityController extends AbstractController
     {
         if ($this->getUser())
             return $this->redirectToRoute('sortie_index');
-        $error = "";
         // get the login error if there is one
         if($authenticationUtils->getLastAuthenticationError())
-            $error = "L'identifiant ou le mot de passe est invalide";
+            $this->addFlash('error', "L'identifiant ou le mot de passe est invalide");
         // last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
 
-        return $this->render('security/login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
+        return $this->render('security/login.html.twig', ['last_username' => $lastUsername]);
     }
 
     /**

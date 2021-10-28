@@ -113,6 +113,7 @@ class ParticipantController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $pseudo_user = $participantRepository->findExistPseudo($form->get('pseudo')->getData());
             if ($pseudo_user != null && $user->getPseudo() != $pseudo_user[0]['pseudo']) {
+                $this->addFlash('error', 'Le pseudo est déjà utilisé, veuillez en choisir un autre');
                 return $this->renderForm('participant/edit.html.twig', [
                     'participant' => $participant,
                     'form' => $form,

@@ -28,8 +28,6 @@ class UtilisateurController extends AbstractController
         $user = new Participant();
         $form = $this->createForm(ModificationUtilisateurType::class, $user);
         $form->handleRequest($request);
-        $error = null;
-        $success = null;
 
         if($form->isSubmitted() && $form->isValid()){
             $user = $this->getUser();
@@ -68,18 +66,11 @@ class UtilisateurController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->flush();
 
-            $success = "L'utilisateur à bien été modifié !";
+            $this->addFlash('success', 'L\'utilisateur à bien été modifié !');
 
-            return $this->render('utilisateur/modificationUtilisateur.html.twig', [
-                'modificationUtilisateurForm' => $form->createView(),
-                'success' => $success,
-                'error' =>$error
-            ]);
         }
             return $this->render('utilisateur/modificationUtilisateur.html.twig', [
                 'modificationUtilisateurForm' => $form->createView(),
-                'success' => $success,
-                'error' => $error,
             ]);
         }
         else {

@@ -5,15 +5,12 @@
 {% block content %}
     <h3 class="my-3">Importer des utilisateurs</h3>
 
-    
-    <div class="offset-3 col-6">
+    <div class="offset-3 col-6 mt-5">
         {{ include('import/_form.import_files.html.twig') }}
         <div class='text-center'>
             <p>Si l'import de votre fichier affiche une erreur, la structure de votre fichier est incorrect.</p>
         </div>
     </div>
-
-
 
     {% for message in app.flashes('import-success') %}
         <div class="flash-import-success">

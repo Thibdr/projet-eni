@@ -236,10 +236,24 @@ class Sortie
     /**
      * @Assert\Callback
      */
-    public function validate(ExecutionContextInterface $context, $payload) {
+    public function validate(ExecutionContextInterface $context) {
+
         if ($this->dateHeureDebut < $this->dateLimiteInscription) {
             $context->buildViolation("La date limite d'inscription doit précéder la date de début de la sortie")
                 ->atPath('dateHeureDebut')
+                ->addViolation();
+        }
+
+        $date = new \DateTime('today');
+        if($this->getDateHeureDebut() <= $date) {
+            $context->buildViolation("La date limite de la sortie ne peut être antérieure à aujourd'hui")
+                ->atPath('dateHeureDebut')
+                ->addViolation();
+        }
+
+        if($this->getDateLimiteInscription() <= $date) {
+            $context->buildViolation("La date limite d'inscription ne peut être antérieure à aujourd'hui")
+                ->atPath('dateLimiteInscription')
                 ->addViolation();
         }
     }

@@ -62,14 +62,14 @@ class SortieType extends AbstractType
             ->add('nbInscriptionsMax', IntegerType::class, [
                 'constraints' => [
                     new NotBlank(['message' => "Veuillez renseigner un nombre de places maximum"]),
-                    new Positive()
+                    new Positive(['message' => "Le nombre de places doit être supérieur à 0"])
                 ],
                 'label' => 'Nombre de places',
             ])
             ->add('duree', IntegerType::class, [
                 'constraints' => [
                     new NotBlank(['message' => 'Veuillez renseigner une durée']),
-                    new Positive()
+                    new Positive(['message' => "Le nombre de places doit être supérieur à 0"])
                 ],
                 'label' => 'Durée',
             ])

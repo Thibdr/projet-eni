@@ -211,6 +211,49 @@ class SortieType extends AbstractType
                 }
             }
         );
+
+        $builder->addEventListener(
+            FormEvents::POST_SUBMIT,
+            function (FormEvent $event) {
+                $data = $event->getData();
+                $form = $event->getForm();
+                $data->nomLieu = $form->get('nomLieu')->getData();
+                $data->rue = $form->get('rue')->getData();
+                $data->latitude = $form->get('latitude')->getData();
+                $data->longitude = $form->get('longitude')->getData();
+                $this->validate($form, $data);
+            }
+        );
+    }
+
+    public function validate(Form $form, object $data): void
+    {
+        if($data->getLieu() == null && $data->nomLieu == null) {
+            $error = new FormError('Vous devez définir un lieu pour la sortie');
+
+            $form->get('lieu')->addError($error);
+            $form->get('nomLieu')->addError($error);
+        } else if($data->getLieu() != null && $data->nomLieu != null) {
+            $error = new FormError('Vous devez définir plusieurs fois le lieu pour la sortie');
+
+            $form->get('lieu')->addError($error);
+            $form->get('nomLieu')->addError($error);
+        }
+        if($data->nomLieu != null) {
+            if($data->rue == null) {
+                $form->get('rue')->addError(new FormError('Veuillez renseigner un nom de rue'));
+            }
+            if($data->latitude == null) {
+                $form->get('latitude')->addError(new FormError('Veuillez renseigner une latitude'));
+            } else if(!is_numeric($data->latitude)) {
+                $form->get('latitude')->addError(new FormError('La longitude doit être un nombre décimal'));
+            }
+            if($data->longitude == null) {
+                $form->get('longitude')->addError(new FormError('Veuillez renseigner une longitude'));
+            } else if(!is_numeric($data->longitude)) {
+                $form->get('longitude')->addError(new FormError('La longitude doit être un nombre décimal'));
+            }
+        }
     }
 
     private function addPlaceField(FormInterface $form, ?Ville $ville) {

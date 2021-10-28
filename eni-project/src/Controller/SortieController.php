@@ -172,7 +172,7 @@ class SortieController extends AbstractController
         }
 
         $date = new \DateTime('now');
-        if($sortie->getEtat() == "En création" || $sortie->getDateHeureDebut() < $date) {
+        if($sortie->getEtat() == "En création" || $sortie->getEtat() == "Annulée" || $sortie->getDateHeureDebut() < $date) {
             throw $this->createAccessDeniedException('Vous ne pouvez pas annuler la sortie', new NoConfigurationException());
         }
 
@@ -182,7 +182,7 @@ class SortieController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $data = (object)$form->getData();
             $sortie->setInformations($data->motif);
-            $sortie->setEtat('Annulee');
+            $sortie->setEtat('Annulée');
 
             $this->getDoctrine()->getManager()->flush();
 

@@ -10,6 +10,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TelType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -27,6 +28,10 @@ class ParticipantType extends AbstractType
             ->add('pseudo', TextType::class, [
                 'constraints' => [
                     new NotBlank(['message' => 'Veuillez renseigner un pseudo']),
+                    new Regex([
+                        'pattern' => '/^[A-Za-z0-9_]+$/',
+                        'message' => 'Le pseudo doit être au bon format'
+                    ]),
                     new Length([
                         'min' => 4,
                         'max' => 20,
@@ -35,23 +40,25 @@ class ParticipantType extends AbstractType
                     ])
                 ], 'label_attr' => [
                     'class' => 'col-form-label'
-                ]
+                ],
+                'label' => 'Pseudo :'
             ])
-            //->add('roles')
-            ->add('password', PasswordType::class, [
+            ->add('password', PasswordType::class,[
+                'label' => 'Nouveau mot de passe',
                 'required' => false,
+                'empty_data' => ''
             ])
             ->add('roles', ChoiceType::class,[
                 'expanded' => true,
                 'multiple' => true,
                 'choices' => $this->getRole(),
-                'label' => 'Role',
+                'label' => 'Role :',
             ])
             ->add('nom', TextType::class, [
                 'constraints' => [
                     new NotBlank(['message' => 'Veuillez renseigner un pseudo']),
                     new Regex([
-                        'pattern' => '/^[a-zA-Z]+$/',
+                        'pattern' => '/^[a-zA-Zéèà]+$/',
                         'message' => 'Le nom doit être au bon format'
                     ]),
                     new Length([
@@ -62,13 +69,14 @@ class ParticipantType extends AbstractType
                     ])
                 ], 'label_attr' => [
                     'class' => 'col-form-label'
-                ]
+                ],
+                'label' => 'Nom :'
             ])
             ->add('prenom', TextType::class, [
                 'constraints' => [
                     new NotBlank(['message' => 'Veuillez renseigner un pseudo']),
                     new Regex([
-                        'pattern' => '/^[a-zA-Z]+$/',
+                        'pattern' => '/^[a-zA-Zéèà]+$/',
                         'message' => 'Le prénom doit être au bon format'
                     ]),
                     new Length([
@@ -79,7 +87,8 @@ class ParticipantType extends AbstractType
                     ])
                 ], 'label_attr' => [
                     'class' => 'col-form-label'
-                ]
+                ],
+                'label' => 'Prénom :'
             ])
             ->add('telephone', TelType::class, [
                 'constraints' => [
@@ -87,8 +96,14 @@ class ParticipantType extends AbstractType
                     new Regex([
                         'pattern' => '/^(?:(?:\+|00)33[\s.-]{0,3}(?:\(0\)[\s.-]{0,3})?|0)[1-9](?:(?:[\s.-]?\d{2}){4}|\d{2}(?:[\s.-]?\d{3}){2})$/',
                         'message' => 'Le numéro de téléphone doit être au bon format'
+                    ]),
+                    new Length([
+                        'max' => 10,
+                        'maxMessage' => "Téléphone trop long ! Au plus 10 caractères"
                     ])
+
                 ],
+                'label' => 'Téléphone :'
             ])
             ->add('mail', EmailType::class, [
                 'constraints' => [
@@ -98,6 +113,7 @@ class ParticipantType extends AbstractType
                         'message' => 'L\'adresse mail doit être au bon format (xx@example.com'
                     ])
                 ],
+                'label' => 'Mail :'
             ])
             ->add('campus', EntityType::class, [
                 'attr' => [
@@ -111,7 +127,8 @@ class ParticipantType extends AbstractType
                 'label' => 'Campus',
                 'label_attr' => [
                     'class' => 'col-form-label'
-                ]
+                ],
+                'label' => 'Campus :'
             ])
             ->add('actif')
         ;

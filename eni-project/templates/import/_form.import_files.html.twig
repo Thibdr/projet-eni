@@ -1,10 +1,10 @@
 {{ form_start(form) }}
-    <div class='import-form'>
+    <div class='import-csv-form'>
         {{ form_widget(form.donnees) }}
         <small>{{ form_help(form.donnees) }}</small>
         <div class="form-error">
             {{ form_errors(form.donnees) }}
         </div>
-        <button class="btn btn btn-primary btnImp">{{ button_label|default('Importer') }}</button>
+        <button class="btn btn btn-warning btnImp">{{ button_label|default('Importer') }}</button>
     </div>
 {{ form_end(form) }}

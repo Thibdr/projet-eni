@@ -1,21 +1,18 @@
 {{ form_start(form) }}
-    
     <div class="row">
-        <div class="col">
-            <div class="form-group">
-                {{ form_row(form.site) }}
-            </div>
-            <div class="form-group">
-                {{ form_row(form.nom) }}
-            </div>
-            <div class="form-group">
-                {{ form_row(form.start) }}
-            </div>
-            <div class="form-group">
-                {{ form_row(form.end) }}
+        <div class="col-3 offset-1">
+            {{ form_row(form.site) }}
+            {{ form_row(form.nom) }}
+            <div class="row">
+                <div class="col-6 form-group" >
+                    {{ form_row(form.start) }}
+                </div>
+                <div class="col-6 form-group">
+                    {{ form_row(form.end) }}
+                </div>
             </div>
         </div>
-        <div class="col">
+        <div class="offset-1 col-4" style='margin-top:3%;'>
             <div class="form-group">
                 {{ form_row(form.orga) }}
             </div>
@@ -29,8 +26,8 @@
                 {{ form_row(form.passees) }}
             </div>
         </div>
-        <div class="col">
-            <button class="btn btn-lg btn-primary btn-filters">{{ button_label|default('Rechercher') }}</button>
+        <div class="col-3" style='margin-top:4%;'>
+            <button class="btn btn-lg btn-warning btn-filters">{{ button_label|default('Rechercher') }}</button>
         </div>
     </div>
 {{ form_end(form) }}

@@ -1,6 +1,6 @@
 {{ form_start(form) }}
     <div class="row">
-        <div class="col">
+        <div class="offset-1 col-5">
             <div class="form-group">
                 {{ form_row(form.nom) }}
             </div>
@@ -20,7 +20,7 @@
                 {{ form_row(form.informations) }}
             </div>
         </div>
-        <div class="col">
+        <div class="col-5">
             <div class="form-group">
                 {{ form_row(form.ville) }}
             </div>
@@ -58,7 +58,7 @@
     </div>
     <div class="text-center my-3">
         <a href="{{ path('sortie_index') }}" class="btn btn-secondary">Retour à l'accueil</a>
-        <button class="btn btn-primary" name="{{ field_name(form.save) }}">{{ button_label|default('Enregistrer') }}</button>
+        <button class="btn btn-warning" name="{{ field_name(form.save) }}">{{ button_label|default('Enregistrer') }}</button>
         {{ form_widget(form.publish) }}
     </div>
 

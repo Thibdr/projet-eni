@@ -1,3 +1,5 @@
+// Général
+
 body{
     background-color: rgb(255, 248, 233);
     font-family: "Gill Sans", sans-serif;
@@ -8,6 +10,8 @@ h3{
     text-align: center;
     text-decoration: underline;
 }
+
+// Classes
 
 .footer{
     margin-top: 3%;
@@ -23,12 +27,6 @@ h3{
 
 .flash-not-imported{
     color:red;
-}
-
-.import-csv-form{
-    margin-top: 5%;
-    margin-bottom: 5%;
-    text-align: center;
 }
 
 .login-form{

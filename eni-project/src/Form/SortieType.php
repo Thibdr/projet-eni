@@ -115,6 +115,15 @@ class SortieType extends AbstractType
                 'label' => 'Publier'
             ]);
 
+        $builder->get('ville')->addEventListener(
+            FormEvents::POST_SUBMIT,
+            function(FormEvent $event) {
+                $form = $event->getForm();
+
+                $this->addPlaceField($form->getParent(), $form->getData());
+            }
+        );
+
         $builder->addEventListener(
             FormEvents::POST_SET_DATA,
             function(FormEvent $event) {
@@ -130,15 +139,6 @@ class SortieType extends AbstractType
                 } else {
                     $this->addPlaceField($form, null);
                 }
-            }
-        );
-
-        $builder->get('ville')->addEventListener(
-            FormEvents::POST_SUBMIT,
-            function(FormEvent $event) {
-                $form = $event->getForm();
-
-                $this->addPlaceField($form->getParent(), $form->getData());
             }
         );
 

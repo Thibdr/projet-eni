@@ -1,4 +1,5 @@
 {{ form_start(form) }}
+    {{ form_row(form._token) }}
     <div class="row">
         <div class="offset-1 col-5">
             <div class="form-group">
@@ -56,13 +57,9 @@
             </div>
         </div>
     </div>
-    <div class="text-center my-3">
+    <div class="text-center mt-3">
         <a href="{{ path('sortie_index') }}" class="btn btn-secondary">Retour à l'accueil</a>
         <button class="btn btn-warning" name="{{ field_name(form.save) }}">{{ button_label|default('Enregistrer') }}</button>
         {{ form_widget(form.publish) }}
-        <form method="post" action="{{ path('sortie_delete', {'id': sortie.id}) }}" onsubmit="return confirm('Etes vous sûr de vouloir supprimer cette sortie ?');">
-            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ sortie.id) }}">
-            <button class="col-2 btn btn-danger">Supprimer</button>
-        </form>
     </div>
 {{ form_end(form) }}

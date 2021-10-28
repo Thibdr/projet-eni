@@ -28,13 +28,8 @@
                     <td>{{ lieu.longitude }}</td>
                     <td>
                         <div class="d-flex">
-                            <div class="flex-fill">
-                                <a href="{{ path('lieu_edit', {'id': lieu.id}) }}" class="btn btn-warning">Modifier</a>
-                            </div>
-                            <div class="flex-fill">
-                                {{ include('lieu/_delete_form.html.twig') }}
-
-                            </div>
+                            <a href="{{ path('lieu_edit', {'id': lieu.id}) }}" class="btn btn-warning me-1">Modifier</a>
+                            {{ include('lieu/_delete_form.html.twig') }}
                         </div>
                     </td>
                 </tr>

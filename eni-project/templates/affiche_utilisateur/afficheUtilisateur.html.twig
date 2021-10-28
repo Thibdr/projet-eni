@@ -1,17 +1,43 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello AfficheUtilisateurController!{% endblock %}
+{% block title %}Participant{% endblock %}
 
 {% block body %}
-    <h1 class="text-center text-primary my-5">{{ participant.pseudo }}</h1>
-<div class="row justify-content-md-center">
-    <p> Prénom : {{ participant.prenom }}</p>
-    <p> Nom : {{ participant.nom }}</p>
-    <p> Téléphone : {{ participant.telephone }}</p>
-    <p> Email : {{ participant.mail }}</p>
-    <p> Ville de rattachement : {{ participant.campus.nom }}</p>
-    {% if participant.photo %}
-    <img src="{{ asset(participant.photo) }}" alt="">
-    {% endif %}
-    <div>
+    <h3 class="my-3">{{ participant.pseudo}}</h1>
+
+  
+        <div class="mx-3" >
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <th>Id</th>
+                        <td>{{ participant.id }}</td>
+                    </tr>
+                    <tr>
+                        <th>Pseudo</th>
+                        <td>{{ participant.pseudo }}</td>
+                    </tr>
+                    <tr>
+                        <th>Campus</th>
+                        <td>{{ participant.campus.nom }}</td>
+                    </tr>
+                    <tr>
+                        <th>Nom</th>
+                        <td>{{ participant.nom }}</td>
+                    </tr>
+                    <tr>
+                        <th>Prenom</th>
+                        <td>{{ participant.prenom }}</td>
+                    </tr>
+                    <tr>
+                        <th>Telephone</th>
+                        <td>{{ participant.telephone }}</td>
+                    </tr>
+                    <tr>
+                        <th>Mail</th>
+                        <td>{{ participant.mail }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 {% endblock %}

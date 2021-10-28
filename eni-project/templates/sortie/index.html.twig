@@ -57,21 +57,21 @@
                                     sortie.participant|length < sortie.nbInscriptionsMax and
                                     sortie.dateLimiteInscription|date('d/m/Y') < 'now'|date('d/m/Y')
                                 %}
-                                    <a href="{{ path('sortie_subscribe', {'id': sortie.id}) }}">S'inscrire</a>
+                                    <a  class="btn btn-warning"href="{{ path('sortie_subscribe', {'id': sortie.id}) }}">S'inscrire</a>
                                 {% elseif inscrit == 'X' and 
                                     sortie.dateHeureDebut|date('d/m/Y H:i:s') < 'now'|date('d/m/Y H:i:s')
                                 %} 
-                                    <a href="{{ path('sortie_unsubscribe', {'id': sortie.id}) }}">Se désinscrire</a>
+                                    <a class="btn btn-warning" href="{{ path('sortie_unsubscribe', {'id': sortie.id}) }}">Se désinscrire</a>
                                 {% endif %}
                                 {% if (sortie.organisateur == app.user) or 
                                     (is_granted('ROLE_ADMIN')) and 
                                     sortie.dateHeureDebut|date('d/m/Y H:i:s') < 'now'|date('d/m/Y H:i:s') 
                                 %}
-                                    <a href="{{ path('sortie_cancel', {'id': sortie.id}) }}">Annuler</a>
+                                    <a class="btn btn-warning" href="{{ path('sortie_cancel', {'id': sortie.id}) }}">Annuler</a>
                                 {% endif %}
-                                <a href="{{ path('sortie_show', {'id': sortie.id}) }}">Afficher</a>
+                                <a class="btn btn-warning" href="{{ path('sortie_show', {'id': sortie.id}) }}">Afficher</a>
                             {% else %}
-                                <a href="{{ path('sortie_show', {'id': sortie.id}) }}">Afficher</a>
+                                <a class="btn btn-warning" href="{{ path('sortie_show', {'id': sortie.id}) }}">Afficher</a>
                             {% endif %}
                         </td>
                     </tr>

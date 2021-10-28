@@ -12,7 +12,7 @@
         <h3 class="my-xl-3">Filtrer les sorties</h3>
         {{ include('sortie/_filters.html.twig') }}
         <div class="mx-3 mt-5">
-            <table class="table">
+            <table class="table align-middle">
                 <thead>
                     <tr>
                         <th>Nom de la sortie</th>
@@ -44,33 +44,37 @@
                         <td>{{ sortie.organisateur }}</td>
                         <td>
                             {% if sortie.etat == 'En création' %}
-                                {% if (sortie.organisateur == app.user) or 
-                                    (is_granted('ROLE_ADMIN')) and 
-                                    sortie.dateHeureDebut|date('d/m/Y H:i:s') < 'now'|date('d/m/Y H:i:s') 
+                                {% if sortie.dateHeureDebut|date('Y-m-d H:i:s') > date('now')|date('Y-m-d H:i:s')
+                                    and (sortie.organisateur == app.user) or (is_granted('ROLE_ADMIN'))
                                 %}
                                     <a class="btn btn-warning" href="{{ path('sortie_edit', {'id': sortie.id}) }}">Modifier</a>
-                                    <a class="btn btn-warning" href="{{ path('sortie_cancel', {'id': sortie.id}) }}">Annuler</a>
                                 {% endif %}
                             {% elseif sortie.etat == 'Ouverte' %}
-                                {% if inscrit == '' and 
-                                    sortie.organisateur != app.user and
-                                    sortie.participant|length < sortie.nbInscriptionsMax and
-                                    sortie.dateLimiteInscription|date('d/m/Y') < 'now'|date('d/m/Y')
+                                <a class="btn btn-warning" href="{{ path('sortie_show', {'id': sortie.id}) }}">Afficher</a>
+                                {% if inscrit == ''
+                                    and sortie.organisateur != app.user
+                                    and sortie.participant|length < sortie.nbInscriptionsMax
+                                    and  sortie.dateLimiteInscription|date('Y-m-d') > date('now')|date('Y-m-d')
                                 %}
                                     <a  class="btn btn-warning"href="{{ path('sortie_subscribe', {'id': sortie.id}) }}">S'inscrire</a>
-                                {% elseif inscrit == 'X' and 
-                                    sortie.dateHeureDebut|date('d/m/Y H:i:s') < 'now'|date('d/m/Y H:i:s')
-                                %} 
+                                {% elseif inscrit == 'X'
+                                    and sortie.dateHeureDebut|date('Y-m-d H:i:s') > date('now')|date('Y-m-d H:i:s')
+                                %}
                                     <a class="btn btn-warning" href="{{ path('sortie_unsubscribe', {'id': sortie.id}) }}">Se désinscrire</a>
                                 {% endif %}
-                                {% if (sortie.organisateur == app.user) or 
-                                    (is_granted('ROLE_ADMIN')) and 
-                                    sortie.dateHeureDebut|date('d/m/Y H:i:s') < 'now'|date('d/m/Y H:i:s') 
+                                {% if (sortie.organisateur == app.user) or (is_granted('ROLE_ADMIN')) and
+                                    sortie.dateHeureDebut|date('Y-m-d H:i:s') > date('now')|date('Y-m-d H:i:s')
                                 %}
                                     <a class="btn btn-warning" href="{{ path('sortie_cancel', {'id': sortie.id}) }}">Annuler</a>
                                 {% endif %}
+                            {% elseif sortie.etat == 'Fermée' %}
                                 <a class="btn btn-warning" href="{{ path('sortie_show', {'id': sortie.id}) }}">Afficher</a>
-                            {% else %}
+                                {% if (sortie.organisateur == app.user) or (is_granted('ROLE_ADMIN')) and
+                                    sortie.dateHeureDebut|date('Y-m-d H:i:s') > date('now')|date('Y-m-d H:i:s')
+                                %}
+                                    <a class="btn btn-warning" href="{{ path('sortie_cancel', {'id': sortie.id}) }}">Annuler</a>
+                                {% endif %}
+                            {% elseif sortie.etat != 'Historisée' %}
                                 <a class="btn btn-warning" href="{{ path('sortie_show', {'id': sortie.id}) }}">Afficher</a>
                             {% endif %}
                         </td>

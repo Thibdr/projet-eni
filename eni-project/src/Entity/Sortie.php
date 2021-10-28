@@ -238,7 +238,7 @@ class Sortie
      */
     public function validate(ExecutionContextInterface $context) {
 
-        if ($this->dateLimiteInscription->format('Y-m-d') >= $this->dateHeureDebut->format('Y-m-d')) {
+        if ($this->dateLimiteInscription >= $this->dateHeureDebut) {
             $context->buildViolation("La date limite d'inscription doit précéder la date de début de la sortie")
                 ->atPath('dateHeureDebut')
                 ->addViolation();

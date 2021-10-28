@@ -111,6 +111,10 @@ class SortieController extends AbstractController
      */
     public function show(Sortie $sortie): Response
     {
+        if($sortie->getEtat() == 'Historisée') {
+            return $this->redirectToRoute('sortie_index', [], Response::HTTP_SEE_OTHER);
+        }
+
         return $this->render('sortie/show.html.twig', [
             'sortie' => $sortie,
         ]);
@@ -121,6 +125,10 @@ class SortieController extends AbstractController
      */
     public function edit(Request $request, Sortie $sortie): Response
     {
+        if($sortie->getEtat() != 'En création') {
+            return $this->redirectToRoute('sortie_index', [], Response::HTTP_SEE_OTHER);
+        }
+
         $form = $this->createForm(SortieType::class, $sortie);
         $form->handleRequest($request);
 
@@ -161,6 +169,10 @@ class SortieController extends AbstractController
      */
     public function delete(Request $request, Sortie $sortie): Response
     {
+        if($sortie->getEtat() != 'En création') {
+            return $this->redirectToRoute('sortie_index', [], Response::HTTP_SEE_OTHER);
+        }
+
         if ($this->isCsrfTokenValid('delete'.$sortie->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($sortie);
@@ -249,12 +261,14 @@ class SortieController extends AbstractController
 
         $participants = $sortie->getParticipant();
         if(!$this->isSubscriber($participants, $this->getUser())) {
-            throw $this->createAccessDeniedException("Vous n'êtes pas inscrit à cette sortie.", new NoConfigurationException());
+            $this->addFlash('error', "Vous n'êtes pas inscrit à cette sortie.");
+            return $this->redirectToRoute('sortie_index', [], Response::HTTP_SEE_OTHER);
         }
 
         $date = new \DateTime('now');
         if($sortie->getDateHeureDebut() < $date) {
-            throw $this->createAccessDeniedException("La sortie a débutée, vous ne pouvez plus vous désinscrire.", new NoConfigurationException());
+            $this->addFlash('error', "La sortie a débutée, vous ne pouvez plus vous désinscrire.");
+            return $this->redirectToRoute('sortie_index', [], Response::HTTP_SEE_OTHER);
         }
 
         // Suppression de l'utilisateur de la liste des participants de la sortie

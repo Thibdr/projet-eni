@@ -4,10 +4,6 @@
 
 {% block body %}
 
-    {% if error %}
-        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-    {% endif %}
-
     {% if app.user %}
         <div class="mb-3">
             Vous êtes connecté en tant que : {{ app.user.username }}, <a href="{{ path('app_logout') }}">Se déconnecter</a>
@@ -20,6 +16,9 @@
             <div class="login-form">
                 <form method="post">
                     <div class='row'>
+                        {% if error %}
+                            <div class="text-center alert alert-danger">{{ error }}</div>
+                        {% endif %}
                         <label class='offset-1 col-4 offset-sm-3 col-sm-3' for="inputPseudo">Identifiant :</label>
                         <input class='col-6 col-sm-3' type="text" value="{{ last_username }}" name="pseudo" id="inputPseudo" class="form-control" autocomplete="username" required autofocus>
                     </div>

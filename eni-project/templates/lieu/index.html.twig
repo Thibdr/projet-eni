@@ -29,7 +29,7 @@
                     <td>
                         <div class="d-flex">
                             <div class="flex-fill">
-                                <a href="{{ path('lieu_edit', {'id': lieu.id}) }}" class="btn btn-primary">Modifier</a>
+                                <a href="{{ path('lieu_edit', {'id': lieu.id}) }}" class="btn btn-warning">Modifier</a>
                             </div>
                             <div class="flex-fill">
                                 {{ include('lieu/_delete_form.html.twig') }}
@@ -47,7 +47,7 @@
         </table>
 
         <div class="text-center">
-            <a href="{{ path('lieu_new') }}" class="btn btn-primary">Nouveau lieu</a>
+            <a href="{{ path('lieu_new') }}" class="btn btn-warning">Nouveau lieu</a>
         </div>
     </div>
 {% endblock %}

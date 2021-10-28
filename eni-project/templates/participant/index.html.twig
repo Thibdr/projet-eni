@@ -3,47 +3,49 @@
 {% block title %}Administration - Liste des participants{% endblock %}
 
 {% block content %}
-    <h3 class="text-uppercase text-secondary">Liste des participants</h3>
-
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Pseudo</th>
-                <th>Campus</th>
-                <th>Roles</th>
-                <th>Nom</th>
-                <th>Prenom</th>
-                <th>Telephone</th>
-                <th>Mail</th>
-                <th>Actif</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for participant in participants %}
-            <tr>
-                <td>{{ participant.id }}</td>
-                <td>{{ participant.pseudo }}</td>
-                <td>{{ participant.campus.nom }}</td>
-                <td>{{ participant.roles ? participant.roles|json_encode : '' }}</td>
-                <td>{{ participant.nom }}</td>
-                <td>{{ participant.prenom }}</td>
-                <td>{{ participant.telephone }}</td>
-                <td>{{ participant.mail }}</td>
-                <td>{{ participant.actif ? 'Oui' : 'Non' }}</td>
-                <td>
-                    <a href="{{ path('participant_show', {'id': participant.id}) }}">Afficher</a>
-                    <a href="{{ path('participant_edit', {'id': participant.id}) }}">Modifier</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="11">Aucun résultat ne correspond à votre recherche</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-    <a href="{{ path('participant_new') }}">Create new</a>
+    <h3 class="my-3">Liste des utilisateurs</h3>
+    <div class="mx-1">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Pseudo</th>
+                    <th>Campus</th>
+                    <th>Roles</th>
+                    <th>Nom</th>
+                    <th>Prenom</th>
+                    <th>Telephone</th>
+                    <th>Mail</th>
+                    <th>Actif</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for participant in participants %}
+                <tr>
+                    <td>{{ participant.id }}</td>
+                    <td>{{ participant.pseudo }}</td>
+                    <td>{{ participant.campus.nom }}</td>
+                    <td>{{ participant.roles ? participant.roles|json_encode : '' }}</td>
+                    <td>{{ participant.nom }}</td>
+                    <td>{{ participant.prenom }}</td>
+                    <td>{{ participant.telephone }}</td>
+                    <td>{{ participant.mail }}</td>
+                    <td>{{ participant.actif ? 'Oui' : 'Non' }}</td>
+                    <td>
+                        <a href="{{ path('participant_show', {'id': participant.id}) }}">Afficher</a>
+                        <a href="{{ path('participant_edit', {'id': participant.id}) }}">Modifier</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="11">Aucun résultat ne correspond à votre recherche</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <div class="text-center">
+            <a href="{{ path('participant_new') }}" class="btn btn-primary">Créer un nouvel utilisateur</a> 
+        </div>
+    </div>
 {% endblock %}

@@ -1,4 +1,10 @@
 {{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn btn-primary my-3">{{ button_label|default('Enregister') }}</button>
+    <div class="row">
+        <div class="offset-3 col-6">
+            {{ form_widget(form) }}
+            
+        </div>
+        <button class="offset-5 col-2 btn btn-primary my-3">{{ button_label|default('Enregister') }}</button>
+    </div>
+
 {{ form_end(form) }}

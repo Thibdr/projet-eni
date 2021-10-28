@@ -103,17 +103,39 @@ class ParticipantController extends AbstractController
     /**
      * @Route("/{id}/edit", name="participant_edit", methods={"GET","POST"})
      */
-    public function edit(Request $request, Participant $participant): Response
+    public function edit(ParticipantRepository $participantRepository,Request $request, Participant $participant, UserPasswordHasherInterface $userPasswordHasherInterface): Response
     {
+        $id = $participant->getId();
+        $user = clone $participantRepository->find($id);
         $form = $this->createForm(ParticipantType::class, $participant);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $pseudo_user = $participantRepository->findExistPseudo($form->get('pseudo')->getData());
+            if ($pseudo_user != null && $user->getPseudo() != $pseudo_user[0]['pseudo']) {
+                return $this->renderForm('participant/edit.html.twig', [
+                    'participant' => $participant,
+                    'form' => $form,
+                ]);
+            }
+            if($form->get('pseudo')->getData() != $user->getPseudo() ){
+                $user->setPseudo($form->get('pseudo')->getData());
+            }
+            dd($user->getPassword());
+            if($form->get('password')->getData() != null && $userPasswordHasherInterface->hashPassword($user, $form->get('password')->getData()) != $userPasswordHasherInterface->hashPassword($user, $user->getPassword())) {
+                $participant->setPassword($userPasswordHasherInterface->hashPassword(
+                    $participant,
+                    $form->get('password')->getData()
+                ));
+            }
+            else {
+                $participant->setPassword($user->getPassword());
+            }
+
             $this->getDoctrine()->getManager()->flush();
 
             return $this->redirectToRoute('participant_index', [], Response::HTTP_SEE_OTHER);
         }
-
         return $this->renderForm('participant/edit.html.twig', [
             'participant' => $participant,
             'form' => $form,

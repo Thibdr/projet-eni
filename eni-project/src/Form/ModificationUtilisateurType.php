@@ -90,7 +90,7 @@ class ModificationUtilisateurType extends AbstractType
                     $this, 'validate'
                 ]),
                 new Regex([
-                    'pattern' => '/^[A-Za-z{4,}0-9_]+$/',
+                    'pattern' => '/^[A-Za-z0-9_]+$/',
                     'message' => 'Le pseudo doit être au bon format'
                 ]),
                 new Length([
@@ -138,7 +138,7 @@ class ModificationUtilisateurType extends AbstractType
         'constraints' => [
             new NotBlank(['message' => 'Veuillez renseigner un pseudo']),
             new Regex([
-                'pattern' => '/^[a-zA-Z]+$/',
+                'pattern' => '/^[a-zA-Zéèà]+$/',
                 'message' => 'Le nom doit être au bon format'
             ]),
             new Length([
@@ -155,7 +155,7 @@ class ModificationUtilisateurType extends AbstractType
         'constraints' => [
             new NotBlank(['message' => 'Veuillez renseigner un pseudo']),
             new Regex([
-                    'pattern' => '/^[a-zA-Z]+$/',
+                    'pattern' => '/^[a-zA-Zéèà]+$/',
                     'message' => 'Le prénom doit être au bon format'
             ]),
             new Length([

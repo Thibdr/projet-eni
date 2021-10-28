@@ -3,60 +3,67 @@
 {% block title %}Participant{% endblock %}
 
 {% block content %}
-    <h1>Participant</h1>
+    <h3 class="my-3">{{ participant.nom }} {{ participant.prenom }}</h1>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ participant.id }}</td>
-            </tr>
-            <tr>
-                <th>Pseudo</th>
-                <td>{{ participant.pseudo }}</td>
-            </tr>
-            <tr>
-                <th>Campus</th>
-                <td>{{ participant.campus.nom }}</td>
-            </tr>
-            <tr>
-                <th>Roles</th>
-                <td>{{ participant.roles ? participant.roles|json_encode : '' }}</td>
-            </tr>
-            <tr>
-                <th>Password</th>
-                <td>{{ participant.password }}</td>
-            </tr>
-            <tr>
-                <th>Nom</th>
-                <td>{{ participant.nom }}</td>
-            </tr>
-            <tr>
-                <th>Prenom</th>
-                <td>{{ participant.prenom }}</td>
-            </tr>
-            <tr>
-                <th>Telephone</th>
-                <td>{{ participant.telephone }}</td>
-            </tr>
-            <tr>
-                <th>Mail</th>
-                <td>{{ participant.mail }}</td>
-            </tr>
-            <tr>
-                <th>Actif</th>
-                <td>{{ participant.actif ? 'Oui' : 'Non' }}</td>
-            </tr>
-            <tr>
-                <th>Photo</th>
-                <td>{{ participant.photo }}</td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="mx-3">
+        <table class="table">
+            <tbody>
+                <tr>
+                    <th>Id</th>
+                    <td>{{ participant.id }}</td>
+                </tr>
+                <tr>
+                    <th>Pseudo</th>
+                    <td>{{ participant.pseudo }}</td>
+                </tr>
+                <tr>
+                    <th>Campus</th>
+                    <td>{{ participant.campus.nom }}</td>
+                </tr>
+                <tr>
+                    <th>Roles</th>
+                    <td>{{ participant.roles ? participant.roles|json_encode : '' }}</td>
+                </tr>
+                <tr>
+                    <th>Nom</th>
+                    <td>{{ participant.nom }}</td>
+                </tr>
+                <tr>
+                    <th>Prenom</th>
+                    <td>{{ participant.prenom }}</td>
+                </tr>
+                <tr>
+                    <th>Telephone</th>
+                    <td>{{ participant.telephone }}</td>
+                </tr>
+                <tr>
+                    <th>Mail</th>
+                    <td>{{ participant.mail }}</td>
+                </tr>
+                <tr>
+                    <th>Actif</th>
+                    <td>{{ participant.actif ? 'Oui' : 'Non' }}</td>
+                </tr>
+                <tr>
+                    <th>Photo</th>
+                    <td>{{ participant.photo }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 
-    <a href="{{ path('participant_index') }}">back to list</a>
+    
 
-    <a href="{{ path('participant_edit', {'id': participant.id}) }}">edit</a>
 
-    {{ include('participant/_delete_form.html.twig') }}
+            <form method="post" action="{{ path('participant_delete', {'id': participant.id}) }}" onsubmit="return confirm('Etes vous sûr de vouloir supprimer cet utilisateur ?');">
+                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ participant.id) }}">
+                
+                <div class="row">
+                    <a class="offset-3 col-2 btn btn-secondary" href="{{ path('participant_index') }}">Retour à la liste</a>
+                    <a class="col-2 btn btn-primary" href="{{ path('participant_edit', {'id': participant.id}) }}">Modifier</a>
+                    <button class="col-2 btn btn-danger">Supprimer</button>
+                </div>
+            </form>
+
+
 {% endblock %}

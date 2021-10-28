@@ -1,12 +1,11 @@
-$(document).on('change', '#sortie_ville', () => {
-    let form = $(this).closest('form')
-    let action = form.attr('action')
+$(document).on('change', '#sortie_ville', function() {
+    let $field = $(this)
+    let $form = $field.closest('form')
     let data = {}
 
-    data[$(this).attr('name')] = $(this).val()
-
-    $.post(action, data).then(function(data) {
-        let input = $(data).find('#sortie_lieu')
-        $('#sortie_lieu').replaceWith(input)
+    data[$field.attr('name')] = $field.val()
+    $.post($form.attr('action'), data).then(function(data) {
+        let $input = $(data).find('#sortie_lieu')
+        $('#sortie_lieu').replaceWith($input)
     })
 });

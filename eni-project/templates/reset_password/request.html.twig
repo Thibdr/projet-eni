@@ -3,13 +3,6 @@
 {% block title %}Demande de réinitialisation de votre mot de passe{% endblock %}
 
 {% block body %}
-    <div class="login-logo">
-        <img src="{{ asset('assets/logo_bl.png') }}" alt="Logo">
-    </div>
-    {% for flashError in app.flashes('reset_password_error') %}
-        <div class="alert alert-danger" role="alert">{{ flashError }}</div>
-    {% endfor %}
-
     <div class="mx-3 mx-sm-0">
         <h3 class="my-3">Demande de réinitialisation de votre mot de passe</h3>
         <div class="row">
@@ -17,20 +10,19 @@
                 <div class="card">
                     <div class="card-body">
                         {{ form_start(requestForm) }}
-                        {{ form_row(requestForm.mail) }}
-                        <div class="text-muted text-center">
-                            <small>
-                                Entrez votre adresse mail et vous recevrez un lien afin de réinitialiser votre mot de passe.
-                            </small>
-                        </div>
+                            {{ form_row(requestForm.mail) }}
+                            <div class="text-muted text-center">
+                                <small>
+                                    Entrez votre adresse mail et vous recevrez un lien afin de réinitialiser votre mot de passe.
+                                </small>
+                            </div>
 
-                        <div class="my-2 text-center">
-                            <button class="btn btn-warning my-2">Envoyer le mail</button>
-                        </div>
+                            <div class="my-2 text-center">
+                                <button class="btn btn-warning my-2">Envoyer le mail</button>
+                            </div>
                         {{ form_end(requestForm) }}
                     </div>
                 </div>
-
             </div>
         </div>
     </div>

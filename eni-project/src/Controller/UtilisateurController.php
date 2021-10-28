@@ -25,61 +25,52 @@ class UtilisateurController extends AbstractController
     public function Update(Request $request, UserPasswordHasherInterface $userPasswordHasherInterface): Response
     {
         if($this->getUser() != null) {
-        $user = new Participant();
-        $form = $this->createForm(ModificationUtilisateurType::class, $user);
-        $form->handleRequest($request);
-        $error = null;
-        $success = null;
+            $user = new Participant();
+            $form = $this->createForm(ModificationUtilisateurType::class, $user);
+            $form->handleRequest($request);
 
-        if($form->isSubmitted() && $form->isValid()){
-            $user = $this->getUser();
+            if($form->isSubmitted() && $form->isValid()){
+                $user = $this->getUser();
 
-            if($form->get('pseudo')->getData() != $user->getPseudo() ){
-                $user->setPseudo($form->get('pseudo')->getData());
-            }
-            if($form->get('prenom')->getData() != $user->getPrenom() ){
-                $user->setPrenom($form->get('prenom')->getData());
-            }
-            if($form->get('nom')->getData() != $user->getNom()){
-                $user->setNom($form->get('nom')->getData());
-            }
-            if($form->get('telephone')->getData() != $user->getTelephone()){
-                $user->setTelephone($form->get('telephone')->getData());
-            }
-            if($form->get('mail')->getData() != $user->getMail()){
-                $user->setMail($form->get('mail')->getData());
-            }
-            if($form->get('password')->getData() != null && $userPasswordHasherInterface->hashPassword($user, $form->get('password')->getData()) != $user->getPassword()) {
-                $user->setPassword($userPasswordHasherInterface->hashPassword(
-                    $user,
-                    $form->get('password')->getData()
-                ));
-            }
-            if($form->get('photo')->getData() != null && $_FILES[$form->getName('photo')]['name'] != $user->getPhoto()) {
-                $name = $_FILES[$form->getName('photo')]['name'];
-                $tmp = $_FILES[$form->getName('photo')]['tmp_name'];
+                if($form->get('pseudo')->getData() != $user->getPseudo() ){
+                    $user->setPseudo($form->get('pseudo')->getData());
+                }
+                if($form->get('prenom')->getData() != $user->getPrenom() ){
+                    $user->setPrenom($form->get('prenom')->getData());
+                }
+                if($form->get('nom')->getData() != $user->getNom()){
+                    $user->setNom($form->get('nom')->getData());
+                }
+                if($form->get('telephone')->getData() != $user->getTelephone()){
+                    $user->setTelephone($form->get('telephone')->getData());
+                }
+                if($form->get('mail')->getData() != $user->getMail()){
+                    $user->setMail($form->get('mail')->getData());
+                }
+                if($form->get('password')->getData() != null && $userPasswordHasherInterface->hashPassword($user, $form->get('password')->getData()) != $user->getPassword()) {
+                    $user->setPassword($userPasswordHasherInterface->hashPassword(
+                        $user,
+                        $form->get('password')->getData()
+                    ));
+                }
+                if($form->get('photo')->getData() != null && $_FILES[$form->getName('photo')]['name'] != $user->getPhoto()) {
+                    $name = $_FILES[$form->getName('photo')]['name'];
+                    $tmp = $_FILES[$form->getName('photo')]['tmp_name'];
 
-                $nom = "../public/assets/images/".$name['photo'];
-                move_uploaded_file($tmp['photo'], $nom);
-                $nomsave = "assets/images/".$name['photo'];
-                $user->setPhoto($nomsave);
+                    $nom = "../public/assets/images/".$name['photo'];
+                    move_uploaded_file($tmp['photo'], $nom);
+                    $nomsave = "assets/images/".$name['photo'];
+                    $user->setPhoto($nomsave);
+                }
+
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->flush();
+
+                $this->addFlash('success', "L'utilisateur à bien été modifié !");
             }
-
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->flush();
-
-            $success = "L'utilisateur à bien été modifié !";
 
             return $this->render('utilisateur/modificationUtilisateur.html.twig', [
                 'modificationUtilisateurForm' => $form->createView(),
-                'success' => $success,
-                'error' =>$error
-            ]);
-        }
-            return $this->render('utilisateur/modificationUtilisateur.html.twig', [
-                'modificationUtilisateurForm' => $form->createView(),
-                'success' => $success,
-                'error' => $error,
             ]);
         }
         else {

@@ -178,12 +178,12 @@ class SortieType extends AbstractType
             ])
             ->add('save', SubmitType::class, [
                 'attr' => [
-                    'class' => 'btn btn-primary'
+                    'class' => 'btn btn-warning'
                 ],
             ])
             ->add('publish', SubmitType::class, [
                 'attr' => [
-                    'class' => 'btn btn-primary'
+                    'class' => 'btn btn-warning'
                 ],
                 'label' => 'Publier'
             ]);

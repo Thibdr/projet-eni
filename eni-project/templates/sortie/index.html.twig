@@ -11,7 +11,7 @@
     <div class="desktop-view">
         <h3 class="my-xl-3">Filtrer les sorties</h3>
         {{ include('sortie/_filters.html.twig') }}
-        <div class="mx-3">
+        <div class="mx-3 mt-5">
             <table class="table">
                 <thead>
                     <tr>
@@ -48,8 +48,8 @@
                                     (is_granted('ROLE_ADMIN')) and 
                                     sortie.dateHeureDebut|date('d/m/Y H:i:s') < 'now'|date('d/m/Y H:i:s') 
                                 %}
-                                    <a href="{{ path('sortie_edit', {'id': sortie.id}) }}">Modifier</a>
-                                    <a href="{{ path('sortie_cancel', {'id': sortie.id}) }}">Annuler</a>
+                                    <a class="btn btn-warning" href="{{ path('sortie_edit', {'id': sortie.id}) }}">Modifier</a>
+                                    <a class="btn btn-warning" href="{{ path('sortie_cancel', {'id': sortie.id}) }}">Annuler</a>
                                 {% endif %}
                             {% elseif sortie.etat == 'Ouverte' %}
                                 {% if inscrit == '' and 
@@ -85,7 +85,7 @@
         </div>
         <div class="text-center">     
             <a href="{{ path('sortie_new') }}">
-                <button class="text-center btn btn-primary">Créer une sortie</button>
+                <button class="text-center btn btn-warning">Créer une sortie</button>
             </a>
         </div>
     </div>
@@ -105,21 +105,21 @@
                     {% set inscrit = '' %}
                     {% for participant in sortie.participant %}
                         {% if participant == app.user %}
-                                {% set inscrit = 'X' %}
+                            {% set inscrit = 'X' %}
                         {% endif %}
                     {% endfor %}
-                    <tr>
-                        <td><a href="{{ path('sortie_show', {'id': sortie.id}) }}">{{ sortie.nom }}</a></td>
-                        <td>{{ sortie.dateHeureDebut ? sortie.dateHeureDebut|date('d/m/Y H:i:s') : '' }}</td>
-                        <td>{{ sortie.lieu.nom }}</td>
-                    </tr>
+                        <tr>
+                            <td><a href="{{ path('sortie_show', {'id': sortie.id}) }}">{{ sortie.nom }}</a></td>
+                            <td>{{ sortie.dateHeureDebut ? sortie.dateHeureDebut|date('d/m/Y H:i:s') : '' }}</td>
+                            <td>{{ sortie.lieu.nom }}</td>
+                        </tr>
                 {% endif %}
             {% else %}
-                <tr>
-                    <td colspan="8">Aucun résultat ne correspond à votre recherche</td>
-                </tr>
+                    <tr>
+                        <td colspan="8">Aucun résultat ne correspond à votre recherche</td>
+                    </tr>
             {% endfor %}
             </tbody>
         </table>
-    <div>
+    </div>
 {% endblock %}

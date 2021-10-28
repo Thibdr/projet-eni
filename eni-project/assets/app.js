@@ -1,4 +1,3 @@
-
 // Librairie
 import 'bootstrap'
 import 'jquery'

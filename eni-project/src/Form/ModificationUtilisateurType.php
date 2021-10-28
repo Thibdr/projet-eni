@@ -174,6 +174,10 @@ class ModificationUtilisateurType extends AbstractType
                     new Regex([
                         'pattern' => '/^(?:(?:\+|00)33[\s.-]{0,3}(?:\(0\)[\s.-]{0,3})?|0)[1-9](?:(?:[\s.-]?\d{2}){4}|\d{2}(?:[\s.-]?\d{3}){2})$/',
                         'message' => 'Le numéro de téléphone doit être au bon format'
+                    ]),
+                    new Length([
+                        'max' => 10,
+                        'maxMessage' => "Téléphone trop long ! Au plus 10 caractères"
                     ])
                 ],
             ])

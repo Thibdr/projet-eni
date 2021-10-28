@@ -18,6 +18,10 @@
         <div class="mb-5 body-content">
             {% if app.user %}
                 {{ include('layout/_navbar.html.twig') }}
+            {% else %}
+                <div class="login-logo">
+                    <img src="{{ asset('assets/logo_bl.png') }}" alt="Logo">
+                </div>
             {% endif %}
 
             {{  include('layout/_alerts.html.twig') }}

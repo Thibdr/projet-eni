@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+        <div class="login-logo">
+            <img src="{{ asset('assets/logo_bl.png') }}" alt="Logo">
+        </div>
+        <h3 class="my-3 ">Bonjour !</h3>
+        <div>
+            <p>Pour réinitialiser votre mot de passe, merci de suivre ce lien.</p>
+            <a href="{{ url('app_reset_password', {token: resetToken.token}) }}">{{ url('app_reset_password', {token: resetToken.token}) }}</a>
+            <p>A bientôt !</p>
+        </div>
+{% endblock %}

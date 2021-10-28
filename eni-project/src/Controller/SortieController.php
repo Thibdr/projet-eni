@@ -12,12 +12,17 @@ use App\Repository\SortieRepository;
 use Doctrine\ORM\PersistentCollection;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+
 use App\Repository\LieuRepository;
 use Symfony\Component\Routing\Exception\NoConfigurationException;
-
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * @IsGranted("ROLE_USER")
@@ -96,7 +101,7 @@ class SortieController extends AbstractController
             $entityManager->persist($sortie);
             $entityManager->flush();
 
-            $this->addFlash('success', 'La sortie a été créée');
+            $this->addFlash('notice', 'La sortie est créée');
             return $this->redirectToRoute('sortie_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -145,7 +150,6 @@ class SortieController extends AbstractController
             $sortie->setEtat($etat);
 
             $entityManager->flush();
-            $this->addFlash('success', 'La sortie a été modifiée');
 
             return $this->redirectToRoute('sortie_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -156,22 +160,6 @@ class SortieController extends AbstractController
         ]);
     }
 
-
-    /**
-     * @Route("/{id}", name="sortie_delete", methods={"POST"})
-     */
-    public function delete(Request $request, Sortie $sortie): Response
-    {
-        if ($this->isCsrfTokenValid('delete'.$sortie->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($sortie);
-            $entityManager->flush();
-        }
-        $this->addFlash('success', 'La sortie a été supprimée');
-
-        return $this->redirectToRoute('sortie_index', [], Response::HTTP_SEE_OTHER);
-    }
-
     /**
      * @Route("/{id}/cancel", name="sortie_cancel", methods={"GET","POST"})
      */
@@ -180,14 +168,12 @@ class SortieController extends AbstractController
         $isAdmin = $this->container->get('security.authorization_checker')->isGranted('ROLE_ADMIN');
 
         if(!$isAdmin && $this->getUser()->getId() != $sortie->getOrganisateur()->getId()) {
-            $this->addFlash('error', "Vous n'avez pas le droit d'accéder à cette page");
-            return $this->redirectToRoute('sortie_index', [], Response::HTTP_SEE_OTHER);
+            throw $this->createAccessDeniedException("Vous n'avez pas le droit d'accéder à cette page", new NoConfigurationException());
         }
 
         $date = new \DateTime('now');
         if($sortie->getEtat() == "En création" || $sortie->getEtat() == "Annulée" || $sortie->getDateHeureDebut() < $date) {
-            $this->addFlash('error', "Vous ne pouvez pas annuler la sortie");
-            return $this->redirectToRoute('sortie_index', [], Response::HTTP_SEE_OTHER);
+            throw $this->createAccessDeniedException('Vous ne pouvez pas annuler la sortie', new NoConfigurationException());
         }
 
         $form = $this->createForm(AnnulationSortieType::class);
@@ -200,7 +186,7 @@ class SortieController extends AbstractController
 
             $this->getDoctrine()->getManager()->flush();
 
-            $this->addFlash('success', 'La sortie a été annulée');
+            $this->addFlash('notice', 'La sortie a été annulée');
             return $this->redirectToRoute('sortie_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -215,31 +201,27 @@ class SortieController extends AbstractController
      */
     public function subscribe(Sortie $sortie): Response {
         if($sortie->getOrganisateur()->getId() == $this->getUser()->getId()) {
-            $this->addFlash('error', "Vous ne pouvez pas vous inscrire à votre sortie");
-            return $this->redirectToRoute('sortie_index', [], Response::HTTP_SEE_OTHER);
+            throw $this->createAccessDeniedException("Vous ne pouvez pas vous inscrire à votre sortie", new NoConfigurationException());
         }
 
         $date = new \DateTime('today');
         if($date > $sortie->getDateLimiteInscription()) {
-            $this->addFlash('error', "Il n'est plus possible de s'inscrire à cette sortie");
-            return $this->redirectToRoute('sortie_index', [], Response::HTTP_SEE_OTHER);
+            throw $this->createAccessDeniedException("Il n'est plus possible de s'inscrire à cette sortie", new NoConfigurationException());
         }
 
         if($sortie->getEtat() != 'Ouverte') {
-            $this->addFlash('error', "Les inscriptions à la sortie ne sont pas ouvertes.");
-            return $this->redirectToRoute('sortie_index', [], Response::HTTP_SEE_OTHER);
+            throw $this->createAccessDeniedException("Les inscriptions à la sortie ne sont pas ouvertes.", new NoConfigurationException());
         }
 
         if($sortie->getParticipant()->count() == $sortie->getNbInscriptionsMax()) {
-            $this->addFlash('error', "Il n'y a plus de places disponibles pour cette sortie.");
-            return $this->redirectToRoute('sortie_index', [], Response::HTTP_SEE_OTHER);
+            throw $this->createAccessDeniedException("Il n'y a plus de places disponibles pour cette sortie.", new NoConfigurationException());
         }
 
         // Ajout de l'utilisateur à la liste des participants de la sortie
         $sortie->addParticipant($this->getUser());
         $this->getDoctrine()->getManager()->flush();
 
-        $this->addFlash('success', 'Vous êtes inscrit à la sortie');
+        $this->addFlash('notice', 'Vous êtes inscrit à la sortie');
         return $this->redirectToRoute('sortie_index', [], Response::HTTP_SEE_OTHER);
     }
 
@@ -250,21 +232,19 @@ class SortieController extends AbstractController
 
         $participants = $sortie->getParticipant();
         if(!$this->isSubscriber($participants, $this->getUser())) {
-            $this->addFlash('error', "Vous n'êtes pas inscrit à cette sortie.");
-            return $this->redirectToRoute('sortie_index', [], Response::HTTP_SEE_OTHER);
+            throw $this->createAccessDeniedException("Vous n'êtes pas inscrit à cette sortie.", new NoConfigurationException());
         }
 
         $date = new \DateTime('now');
         if($sortie->getDateHeureDebut() < $date) {
-            $this->addFlash('error', "La sortie a débutée, vous ne pouvez plus vous désinscrire.");
-            return $this->redirectToRoute('sortie_index', [], Response::HTTP_SEE_OTHER);
+            throw $this->createAccessDeniedException("La sortie a débutée, vous ne pouvez plus vous désinscrire.", new NoConfigurationException());
         }
 
         // Suppression de l'utilisateur de la liste des participants de la sortie
         $sortie->removeParticipant($this->getUser());
         $this->getDoctrine()->getManager()->flush();
 
-        $this->addFlash('success', 'Vous êtes désinscrit de la sortie');
+        $this->addFlash('notice', 'Vous êtes désinscrit de la sortie');
         return $this->redirectToRoute('sortie_index', [], Response::HTTP_SEE_OTHER);
     }
 

@@ -16,13 +16,11 @@
     </head>
     <body class="d-flex flex-column min-vh-100">
         <div class="mb-5 body-content">
-            {% if app.user %}
-                {{ include('layout/_navbar.html.twig') }}
-            {% endif %}
-
-            {{ include('layout/_alerts.html.twig') }}
-
-            {% block body %}{% endblock %}
+               {% if app.user %}
+            {{ include('layout/_navbar.html.twig') }}
+        {% endif %} 
+                        
+        {% block body %}{% endblock %}  
         </div>
         {{ include('layout/footer.html.twig') }}  
     <body >

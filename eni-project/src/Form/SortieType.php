@@ -164,7 +164,7 @@ class SortieType extends AbstractType
             $form->get('lieu')->addError($error);
             $form->get('nomLieu')->addError($error);
         } else if($data->getLieu() != null && $data->nomLieu != null) {
-            $error = new FormError('Vous devez définir plusieurs fois le lieu pour la sortie');
+            $error = new FormError('Vous ne pouvez pas devez définir plusieurs fois le lieu pour la sortie');
 
             $form->get('lieu')->addError($error);
             $form->get('nomLieu')->addError($error);

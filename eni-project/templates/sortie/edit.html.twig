@@ -6,4 +6,12 @@
     <h3 class="my-3">Modifier une sortie</h3>
 
     {{ include('sortie/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
+
+    <form method="post" action="{{ path('sortie_delete', {'id': sortie.id}) }}" onsubmit="return confirm('Etes vous sûr de vouloir supprimer cette sortie ?');">
+        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ sortie.id) }}">
+
+        <button class="col-2 btn btn-danger">Supprimer</button>
+
+    </form>
+
 {% endblock %}
